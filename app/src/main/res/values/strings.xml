@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">YoTravell</string>
+    <!-- Alert Box String-->
+    <string name="error">Error</string>
+    <string name="ok">Ok</string>
+    <string name="success">Success</string>
+    <string name="warning">Warning</string>
+    <string name="info">Info</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <!-- InterNet Connection String-->
+    <string name="net_connection_error_title"><b>Network Error</b></string>
+    <string name="net_connection_error_msg">An unknown network connection error has occurred.</string>
+    <string name="net_connection_error_btn"><b>dismiss</b></string>
+    <!-- Common Strings-->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <!-- String related to Login Activity -->
+    <string name="login_here">Login Here</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="reg_link"><u>Create New Account</u></string>
+    <string name="forget_link"><u>Forget Password</u></string>
+    <string name="login_btn">Sign In</string>
+
+    <!-- String related to Register Activity -->
+    <string name="register_here">Register here</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_country">Country</string>
+    <string name="prompt_city">City</string>
+    <string name="prompt_weather">Weather</string>
+    <string name="register_success_title">Check Your Email</string>
+
+    <!-- String related to Forget password Activity-->
+    <string name="forgot_email_hint">Enter your registered email</string>
+    <string name="forget_password">Forget Password</string>
+    <!-- String related to Forget password OTP Activity-->
+    <string name="forgot_otp_hint">Enter OTP</string>
+    <string name="otp">Enter OTP</string>
+    <string name="otp_title">OTP</string>
+    <!-- String related to Reset password Activity-->
+    <string name="reset_password_hint">Password</string>
+    <string name="reset_confirm_password_hint">Confirm Password</string>
+    <string name="reset_title">Reset Password</string>
+
+
+    <!-- String button-->
+    <string name="forget_btn">SUBMIT</string>
+    <string name="forget_otp_btn">SUBMIT</string>
+    <!--Validation Error Messages-->
+    <string name="error_message">There is a problem in your request.</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_match_password">The passwords you entered do not match</string>
+
+
+    <string name="permission_rationale">Contacts permissions are needed for providing email
+        completions.
+    </string>
+
+    <string name="post_txt">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+    </string>
+    <string name="title_activity_forget_otp">ForgetOtpActivity</string>
+
+    <!-- Menu Title-->
+    <string name="menu_feed">Feed</string>
+    <string name="menu_member">Members List</string>
+    <string name="menu_friend">Friends List</string>
+    <string name="menu_logout">Sign Out</string>
+
+</resources>

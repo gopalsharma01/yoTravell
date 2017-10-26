@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_bg"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#77000000"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#77000000">
+
+            <LinearLayout
+                android:id="@+id/btnRegBack"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_back" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Register"
+                android:textColor="#ffffff"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="70dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgTitleLogo"
+                        android:layout_width="200dp"
+                        android:layout_height="46dp"
+                        app:srcCompat="@drawable/ic_title" />
+
+                    <TextView
+                        android:id="@+id/txtRegSubTitle"
+                        style="@style/subTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/register_here" />
+
+                    <EditText
+                        android:id="@+id/edtRegName"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:hint="@string/prompt_name" />
+
+                    <EditText
+                        android:id="@+id/edtRegUsername"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/prompt_username" />
+
+                    <EditText
+                        android:id="@+id/edtRegEmail"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/prompt_email"
+                        android:inputType="textEmailAddress" />
+
+                    <EditText
+                        android:id="@+id/edtRegPassword"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/prompt_password"
+                        android:inputType="textPassword" />
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/countryList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select Country"
+                        app:met_textColor="#FFFFFF"
+                        app:met_textColorHint="#FFFFFF"
+                        app:met_baseColor="@color/colorTransparentWhite"
+                        app:met_primaryColor="@color/colorTransparentWhite"
+                        />
+                    <Spinner
+                        android:id="@+id/spinnerCountry"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        style="@style/spinner_style"
+                        android:layout_marginTop="15dp"
+                        android:spinnerMode="dropdown"/>
+                    <EditText
+                        android:id="@+id/edtRegCity"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/prompt_city" />
+
+                    <EditText
+                        android:id="@+id/edtRegWeather"
+                        style="@style/CustomInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/prompt_weather" />
+                    <Button
+                        android:id="@+id/btnRegSubmit"
+                        style="@style/CustomBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="20dp"
+                        android:text="SUBMIT" />
+                </LinearLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="user_name">
+        <item>First User</item>
+        <item>Second User</item>
+        <item>Third User</item>
+        <item>Fourth User</item>
+        <item>Fifth User</item>
+    </string-array>
+    <string-array name="user_image">
+        <item>http://api.learn2crack.com/android/images/donut.png</item>
+        <item>http://api.learn2crack.com/android/images/eclair.png</item>
+        <item>http://api.learn2crack.com/android/images/froyo.png</item>
+        <item>http://api.learn2crack.com/android/images/ginger.png</item>
+        <item>http://api.learn2crack.com/android/images/honey.png</item>
+    </string-array>
+</resources>
