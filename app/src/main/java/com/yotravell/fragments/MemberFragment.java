@@ -124,7 +124,7 @@ public class MemberFragment extends Fragment {
      * @return boolean true/false;
      */
     public void setMemberListAdapter(){
-        adapter=new MemberAdapter(getActivity(),aResponse);
+        adapter=new MemberAdapter(getActivity(),aResponse,"Members");
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

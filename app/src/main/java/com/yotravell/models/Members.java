@@ -1,6 +1,5 @@
 package com.yotravell.models;
 
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Developer on 10/25/2017.

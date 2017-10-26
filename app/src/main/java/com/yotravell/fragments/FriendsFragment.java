@@ -122,7 +122,7 @@ public class FriendsFragment extends Fragment {
      * @return boolean true/false;
      */
     public void setFriendsListAdapter(){
-        adapter=new MemberAdapter(getActivity(),aResponse);
+        adapter=new MemberAdapter(getActivity(),aResponse,"Friends");
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

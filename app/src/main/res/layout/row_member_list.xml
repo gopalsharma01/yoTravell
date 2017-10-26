@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:layout_marginTop="10dp"
     android:orientation="vertical">
 
@@ -34,7 +34,7 @@
                     android:id="@+id/txtUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User Name"
+                    android:text="@string/member_username"
                     android:textColor="#000"
                     android:textSize="15dp"
                     android:textStyle="bold" />
@@ -43,8 +43,8 @@
                     android:id="@+id/txtLastLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="active 2 hrs ago"
-                    android:textColor="#ccc"
+                    android:text="@string/member_last_activity"
+                    android:textColor="#aaa"
                     android:textSize="14dp" />
 
             </LinearLayout>
@@ -59,9 +59,10 @@
                     android:textSize="20px"
                     android:paddingTop="5px"
                     android:paddingBottom="5px"
-                    android:text="Cancel Friend"
-                    android:textColor="#000" />
-                <!--<Button
+                    android:text="@string/member_cancel_request"
+                    android:textColor="#000"
+                    android:visibility="gone"/>
+                <Button
                     android:id="@+id/btnCancelFriendship"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,7 +70,8 @@
                     android:textSize="20px"
                     android:paddingTop="5px"
                     android:paddingBottom="5px"
-                    android:text="Cancel Friend"
+                    android:text="@string/member_cancel_friendship"
+                    android:visibility="gone"
                     android:textColor="#000" />
                 <Button
                     android:id="@+id/btnSendRequest"
@@ -79,8 +81,34 @@
                     android:textSize="20px"
                     android:paddingTop="5px"
                     android:paddingBottom="5px"
-                    android:text="Cancel Friend"
-                    android:textColor="#000" />-->
+                    android:text="@string/member_add_friend"
+                    android:visibility="gone"
+                    android:textColor="#000" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/requestAction"
+                    android:visibility="gone">
+                    <Button
+                        android:id="@+id/btnAcceptRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:textSize="20px"
+                        android:padding="5px"
+                        android:text="@string/member_request_accept"
+                        android:textColor="#000" />
+                    <Button
+                        android:id="@+id/btnRejectRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:textSize="20px"
+                        android:padding="5px"
+                        android:text="@string/member_request_reject"
+                        android:textColor="#000" />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

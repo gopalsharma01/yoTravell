@@ -74,4 +74,13 @@
     <string name="menu_friend">Friends List</string>
     <string name="menu_logout">Sign Out</string>
 
+    <!-- Member And Friends List -->
+    <string name="member_username">User Name</string>
+    <string name="member_last_activity">Active 4 hrs Ago</string>
+    <string name="member_cancel_request">Cancel Request</string>
+    <string name="member_cancel_friendship">Cancel Friendship</string>
+    <string name="member_add_friend">Add Friend</string>
+    <string name="member_request_accept">Accept</string>
+    <string name="member_request_reject">Reject</string>
+
 </resources>
