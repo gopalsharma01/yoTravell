@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +31,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MemberFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -43,8 +41,8 @@ public class MemberFragment extends Fragment {
     private ArrayList<Members> aResponse;
     private ProgressDialog mProgressDialog;
 
-    public static MemberFragment newInstance() {
-        return new MemberFragment();
+    public static FriendsFragment newInstance() {
+        return new FriendsFragment();
     }
 
     @Nullable
@@ -59,8 +57,8 @@ public class MemberFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        //Call WebService to get All member List
-        memberWebService();
+        //Call WebService to get All Friends List
+        friendsWebService();
         return view;
     }
     /**
@@ -68,8 +66,8 @@ public class MemberFragment extends Fragment {
      * @params none;
      * @return void;
      */
-    public void memberWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.MEMBER_LIST_URL,
+    public void friendsWebService(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.FRIEND_LIST_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -86,7 +84,7 @@ public class MemberFragment extends Fragment {
                                     //aResponse = Arrays.asList(aMemberLst);
                                     aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
                                     //Log.e("Member name",aResponse.get(0).getEmail());
-                                    setMemberListAdapter();
+                                    setFriendsListAdapter();
                                 }else{
                                     CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
                                     //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
@@ -123,7 +121,7 @@ public class MemberFragment extends Fragment {
      * @params none;
      * @return boolean true/false;
      */
-    public void setMemberListAdapter(){
+    public void setFriendsListAdapter(){
         adapter=new MemberAdapter(getActivity(),aResponse);
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());

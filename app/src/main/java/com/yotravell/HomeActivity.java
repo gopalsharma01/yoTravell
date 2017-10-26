@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.yotravell.VolleyService.AppController;
+import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
 import com.yotravell.fragments.MemberFragment;
 import com.yotravell.utils.CommonUtils;
@@ -76,8 +77,11 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_feed: // Home
                 fragment = new HomeFragment();
                 break;
-            case R.id.nav_members_list: // Home
+            case R.id.nav_members_list: // Members
                 fragment = new MemberFragment();
+                break;
+            case R.id.nav_friends_list: // Friends
+                fragment = new FriendsFragment();
                 break;
             default: // Logout
             {
