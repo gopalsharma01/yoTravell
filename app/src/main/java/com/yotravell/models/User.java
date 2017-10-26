@@ -10,12 +10,43 @@ public class User {
     private String email;
     private String fullName;
     private Integer id;
+    private String totalMember;
+    private String totalFriend;
 
-    public User(String username, String email, String fullName, Integer id) {
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    private String profileImage;
+
+    public String getTotalMember() {
+        return totalMember;
+    }
+
+    public void setTotalMember(String totalMember) {
+        this.totalMember = totalMember;
+    }
+
+    public String getTotalFriend() {
+        return totalFriend;
+    }
+
+    public void setTotalFriend(String totalFriend) {
+        this.totalFriend = totalFriend;
+    }
+
+    public User(String username, String email, String fullName, Integer id,String totalMember, String totalFriend,String profileImage) {
         this.username = username;
         this.email = email;
         this.fullName = fullName;
         this.id = id;
+        this.totalMember = totalMember;
+        this.totalFriend = totalFriend;
+        this.profileImage = profileImage;
     }
 
     public String getUsername() {

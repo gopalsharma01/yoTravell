@@ -14,6 +14,8 @@ public class Constant {
     public static String USER_NAME ="user_name";
     public static String USER_EMAIL ="user_email";
     public static String USER_FULLNAME ="user_fullname";
+    public static String TOTAL_MEMBER ="total_member";
+    public static String USER_TOTAL_FRIEND ="total_friend";
     public static String USER_IMAGE ="user_image";
     public static String USER_TYPE = "userType";
 

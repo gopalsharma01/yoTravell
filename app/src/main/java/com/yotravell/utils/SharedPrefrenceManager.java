@@ -41,11 +41,14 @@ public class SharedPrefrenceManager {
         editor.putString(Constant.USER_NAME, user.getUsername());
         editor.putString(Constant.USER_EMAIL, user.getEmail());
         editor.putString(Constant.USER_FULLNAME, user.getFullName());
+        editor.putString(Constant.TOTAL_MEMBER, user.getTotalMember());
+        editor.putString(Constant.USER_TOTAL_FRIEND, user.getTotalFriend());
+        editor.putString(Constant.USER_IMAGE, user.getProfileImage());
         editor.apply();
     }
     public User getUserDetails() {
         SharedPreferences sharedPreferences = getSharedPrefrences(Constant.USER_SHARED_PREFRENCES);
-        return new User(sharedPreferences.getString(Constant.USER_NAME,null),sharedPreferences.getString(Constant.USER_EMAIL, null),sharedPreferences.getString(Constant.USER_FULLNAME, null),sharedPreferences.getInt(Constant.USER_ID,0));
+        return new User(sharedPreferences.getString(Constant.USER_NAME,null),sharedPreferences.getString(Constant.USER_EMAIL, null),sharedPreferences.getString(Constant.USER_FULLNAME, null),sharedPreferences.getInt(Constant.USER_ID,0),sharedPreferences.getString(Constant.TOTAL_MEMBER, null),sharedPreferences.getString(Constant.USER_TOTAL_FRIEND, null),sharedPreferences.getString(Constant.USER_IMAGE, null));
         //return sharedPreferences.getString(USER_ID, null);
     }
 

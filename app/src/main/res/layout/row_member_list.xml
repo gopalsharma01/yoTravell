@@ -79,8 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|right"
                     android:textSize="20px"
-                    android:paddingTop="5px"
-                    android:paddingBottom="5px"
+                    android:padding="5px"
                     android:text="@string/member_add_friend"
                     android:visibility="gone"
                     android:textColor="#000" />
