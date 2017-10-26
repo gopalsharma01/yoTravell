@@ -1,17 +1,36 @@
 package com.yotravell.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Developer on 9/13/2017.
  */
 
 public class User {
-
+    @SerializedName("username")
     private String username;
+    @SerializedName("email")
     private String email;
+    @SerializedName("fullName")
     private String fullName;
+    @SerializedName("id")
     private Integer id;
+    @SerializedName("totalMember")
     private String totalMember;
+    @SerializedName("totalFriend")
     private String totalFriend;
+    @SerializedName("profileImage")
+    private String profileImage;
+
+    public User(String username, String email, String fullName, Integer id,String totalMember, String totalFriend,String profileImage) {
+        this.username = username;
+        this.email = email;
+        this.fullName = fullName;
+        this.id = id;
+        this.totalMember = totalMember;
+        this.totalFriend = totalFriend;
+        this.profileImage = profileImage;
+    }
 
     public String getProfileImage() {
         return profileImage;
@@ -20,8 +39,6 @@ public class User {
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
-
-    private String profileImage;
 
     public String getTotalMember() {
         return totalMember;
@@ -37,16 +54,6 @@ public class User {
 
     public void setTotalFriend(String totalFriend) {
         this.totalFriend = totalFriend;
-    }
-
-    public User(String username, String email, String fullName, Integer id,String totalMember, String totalFriend,String profileImage) {
-        this.username = username;
-        this.email = email;
-        this.fullName = fullName;
-        this.id = id;
-        this.totalMember = totalMember;
-        this.totalFriend = totalFriend;
-        this.profileImage = profileImage;
     }
 
     public String getUsername() {

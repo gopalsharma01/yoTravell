@@ -1,5 +1,6 @@
 package com.yotravell;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,8 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
@@ -30,6 +33,8 @@ public class HomeActivity extends AppCompatActivity
 
     private NavigationView navigationView;
     private TextView userName,userEmail;
+    private ImageView imgloggedUser;
+    //private ClipData.Item memberCount,friendCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +67,16 @@ public class HomeActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         userName = (TextView)header.findViewById(R.id.loggedUserName);
         userEmail = (TextView)header.findViewById(R.id.loggedUserEmail);
-        userName.setText(AppController.aSessionUserData.getFullName());
-        userEmail.setText(AppController.aSessionUserData.getEmail());
+        imgloggedUser = (ImageView)header.findViewById(R.id.imgHeaderUserImg);
+        userName.setText(AppController.aSessionUserData.getFullName().toString());
+        userEmail.setText(AppController.aSessionUserData.getEmail().toString());
 
+        Picasso.with(this.getApplicationContext())
+                .load(AppController.aSessionUserData.getProfileImage().toString().trim())//"http://i.imgur.com/DvpvklR.png")
+                .placeholder(R.drawable.ic_user_default)   // optional
+                .error(R.drawable.ic_user_default)      // optional  ic_error
+                .resize(400,400)                        // optional
+                .into(imgloggedUser);
 
         displayFragmentByPosition(R.id.nav_feed);
     }
@@ -162,6 +174,10 @@ public class HomeActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+        //memberCount = (ClipData.Item) menu.findItem(R.id.nav_members_list);
+        //friendCount = (ClipData.Item) menu.findItem(R.id.nav_friends_list);
+//        menu.getItem(1).setTitle(R.string.menu_member+" ("+AppController.aSessionUserData.getTotalMember()+")");
+//        menu.getItem(2).setTitle(R.string.menu_friend+" ("+AppController.aSessionUserData.getTotalFriend()+")");
         return true;
     }
 

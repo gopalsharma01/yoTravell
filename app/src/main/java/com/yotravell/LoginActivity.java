@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                                     );*/
                                     //storing the user in shared preferences
                                     SharedPrefrenceManager.getInstance(LoginActivity.this).setUserDetails(userDetail);
+                                    AppController.getSessionData(getApplicationContext());
                                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                     finish();
                                 }else{
