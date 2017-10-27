@@ -44,8 +44,6 @@ public class HomeActivity extends AppCompatActivity
 
         //CommonUtils.ShowToastMessages(HomeActivity.this,AppController.aSessionUserData.getId()+" User Id ,"+AppController.aSessionUserData.getEmail()+" User Enail,"+AppController.aSessionUserData.getFullName()+" User Full name,");
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
                 .load(AppController.aSessionUserData.getProfileImage().toString().trim())//"http://i.imgur.com/DvpvklR.png")
                 .placeholder(R.drawable.ic_user_default)   // optional
                 .error(R.drawable.ic_user_default)      // optional  ic_error
-                .resize(400,400)                        // optional
+                .resize(150,150)                        // optional
                 .into(imgloggedUser);
 
         displayFragmentByPosition(R.id.nav_feed);
@@ -176,8 +174,8 @@ public class HomeActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.home, menu);
         //memberCount = (ClipData.Item) menu.findItem(R.id.nav_members_list);
         //friendCount = (ClipData.Item) menu.findItem(R.id.nav_friends_list);
-//        menu.getItem(1).setTitle(R.string.menu_member+" ("+AppController.aSessionUserData.getTotalMember()+")");
-//        menu.getItem(2).setTitle(R.string.menu_friend+" ("+AppController.aSessionUserData.getTotalFriend()+")");
+  //      menu.getItem(1).setTitle(R.string.menu_member+" ("+AppController.aSessionUserData.getTotalMember()+")");
+    //    menu.getItem(2).setTitle(R.string.menu_friend+" ("+AppController.aSessionUserData.getTotalFriend()+")");
         return true;
     }
 
