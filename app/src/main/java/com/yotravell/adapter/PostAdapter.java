@@ -17,7 +17,7 @@ import com.yotravell.R;
 /**
  * Created by developer on 9/13/2017.
  */
-public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     ImageLoader imageLoader;
     String[] Name;
@@ -32,37 +32,21 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-    LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view  = null;
+    public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
         //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_single_post, parent, false);
-        Log.e(TAG, "Constructor Calling" +viewType);
-
-        if(viewType == 0){
-            view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
-        }else{
-            view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
-        }
-
+        Log.d(TAG, "Constructor Calling");
+        
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        switch (holder.getItemViewType()) {
-            case 0:
-                break;
-            case 2:
-                break;
-        }
-    }
-
-    /*@Override
     public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "Holder " + position);
 
         //holder.UserImage.setImageResource(Image[position]);
-        *//*holder.name.setText(Name[position]);
+        holder.name.setText(Name[position]);
         //holder.Distance.setText(Distance[position]);
         //holder.LastSeen.setText(LastSeen[position]);
         Log.e(TAG, "Holder User image :  " + Image[position]);
@@ -73,9 +57,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .error(R.drawable.ic_placeholder)      // optional  ic_error
                 .resize(400,400)                        // optional
                 .into(holder.UserImage);
-        *//*//loadImage(Image[position],holder.UserImage);
+        //loadImage(Image[position],holder.UserImage);
     }
-*/
+
     private void loadImage(String url,NetworkImageView UserImage){
         if(!url.equals("")) {
             imageLoader = CustomVolleyImageRequest.getInstance(this.context)
@@ -99,11 +83,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public ViewHolder(View v) {
             super(v);
-            Log.d(TAG, "View Holder"+v.getTag());
+            Log.d(TAG, "View Holder");
 
-            /*name = (TextView) v.findViewById(R.id.txtPostUserName);
+            name = (TextView) v.findViewById(R.id.txtPostUserName);
             //UserImage = (NetworkImageView) v.findViewById(R.id.thumbnail);
-            UserImage = (ImageView) v.findViewById(R.id.imgUserProfile);*/
+            UserImage = (ImageView) v.findViewById(R.id.imgUserProfile);
         }
     }
 }

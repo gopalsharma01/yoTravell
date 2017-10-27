@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
                 .load(AppController.aSessionUserData.getProfileImage().toString().trim())//"http://i.imgur.com/DvpvklR.png")
                 .placeholder(R.drawable.ic_user_default)   // optional
                 .error(R.drawable.ic_user_default)      // optional  ic_error
-                .resize(150,150)                        // optional
+                .resize(80,80)                        // optional
                 .into(imgloggedUser);
 
         displayFragmentByPosition(R.id.nav_feed);
