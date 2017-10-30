@@ -24,6 +24,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     String[] Image;
     Context context;
     static final String TAG = "POST ADAPTER**";
+    private static final int ITEM_TYPE_NORMAL = 0;
+    private static final int ITEM_TYPE_HEADER = 1;
 
     public PostAdapter(Context context, String[] name, String[] image) {
         this.context = context;
@@ -34,10 +36,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
+        View view = null;// = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
         //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_single_post, parent, false);
         Log.d(TAG, "Constructor Calling");
-        
+
+        //return new ViewHolder(view);
+        if (viewType == ITEM_TYPE_NORMAL) {
+            view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
+            //View normalView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_feed, null);
+
+        } else if (viewType == ITEM_TYPE_HEADER) {
+            view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
+            //View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);
+
+        }
         return new ViewHolder(view);
     }
 
@@ -67,6 +79,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             imageLoader.get(url, ImageLoader.getImageListener(UserImage,
                     R.drawable.ic_placeholder, R.drawable.ic_error));
             UserImage.setImageUrl(url, imageLoader);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (Name[position] instanceof String) {
+            return ITEM_TYPE_HEADER;
+        } else {
+            return ITEM_TYPE_NORMAL;
         }
     }
 
