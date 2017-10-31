@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Members;
 import com.yotravell.utils.CommonUtils;
 
@@ -126,64 +127,55 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
+            Map<String, String> params = new HashMap<>();
+            String url = null;
             if (v.getId() == cancelRequest.getId() || v.getId() == requestReject.getId() || v.getId() == cancelFriendShip.getId()){
-
-                Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
+                //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
                 //Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-                callWebService(v.getContext(),WebServiceConstant.CANCEL_FRIEND_REQUEST);
+
+                params.put("request_id", String.valueOf(aMembers.get(getAdapterPosition()).getRequestId()));
+                url = WebServiceConstant.CANCEL_FRIEND_REQUEST;
             } else if (v.getId() == addFriend.getId()){
-                Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
-
+                //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
+                params.put("sender_id", String.valueOf(AppController.aSessionUserData.getId()));
+                params.put("receiver_id", String.valueOf(aMembers.get(getAdapterPosition()).getId()));
+                url = WebServiceConstant.SEND_FRIEND_REQUEST;
             } else if (v.getId() == requestAccept.getId()){
-
-                Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
+                params.put("request_id", String.valueOf(aMembers.get(getAdapterPosition()).getRequestId()));
+                url = WebServiceConstant.ACCEPT_FRIEND_REQUEST;
+                //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
+            }
+            if(url!=null){
+                callWebService(v.getContext(),url,params);
             }
         }
 
-        private void callWebService(Context con,String url){
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            //mProgressDialog.dismiss();
-                            try {
-                                Log.e("response ",response);
-                                //converting response to json object
-                                if(response != null){
-                                    JSONObject obj = new JSONObject(response);
-                                    Gson gson = new Gson();
-                                    if(obj.getString("status").equals("1")){
-                                        Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
-                                    }else{
-                                        //CommonUtils.showAlertMessage(con,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                        //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
-                                    }
-                                }else{
-                                    //CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                //CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //mProgressDialog.dismiss();
-                            //CommonUtils.ShowToastMessages(LoginActivity.this,error.getMessage()+" service error  ");
-                            //CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        }
-                    }) {
+        private void callWebService(Context con,String url,Map<String, String> params){
+            AppController.getInstance().callVollayWebService(Request.Method.POST, url, params, new VolleyCallback() {
                 @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("user_id", String.valueOf(AppController.aSessionUserData.getId()));
-                    return params;
-                }
-            };
+                public void onSuccessResponse(String response) {
+                    try {
+                        if(response != null){
+                            Log.e("response in member request",response);
+                            JSONObject obj = new JSONObject(response);
+                            Gson gson = new Gson();
+                            if(obj.getString("status").equals("1")){
+                                Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
+                            }else{
 
-            AppController.getInstance().addToRequestQueue(stringRequest);
+                            }
+                        }else{
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onErrorResponse(String result) {
+
+                }
+            });
         }
     }
 }
