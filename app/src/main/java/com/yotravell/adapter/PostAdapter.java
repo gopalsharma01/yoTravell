@@ -56,20 +56,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "Holder " + position);
+        if (position != 0) {
+            //holder.UserImage.setImageResource(Image[position]);
+            holder.name.setText(Name[position-1]);
+            //holder.Distance.setText(Distance[position]);
+            //holder.LastSeen.setText(LastSeen[position]);
+            Log.e(TAG, "Holder User image :  " + Image[position-1]);
+            //holder.UserImage.setImageUrl(Image[position].toString().trim(), imageLoader);
+            Picasso.with(context)
+                    .load(Image[position-1].toString().trim())
+                    .placeholder(R.drawable.ic_placeholder)   // optional
+                    .error(R.drawable.ic_placeholder)      // optional  ic_error
+                    .resize(400, 400)                        // optional
+                    .into(holder.UserImage);
+            //loadImage(Image[position],holder.UserImage);
 
-        //holder.UserImage.setImageResource(Image[position]);
-        holder.name.setText(Name[position]);
-        //holder.Distance.setText(Distance[position]);
-        //holder.LastSeen.setText(LastSeen[position]);
-        Log.e(TAG, "Holder User image :  " + Image[position]);
-        //holder.UserImage.setImageUrl(Image[position].toString().trim(), imageLoader);
-        Picasso.with(context)
-                .load(Image[position].toString().trim())
-                .placeholder(R.drawable.ic_placeholder)   // optional
-                .error(R.drawable.ic_placeholder)      // optional  ic_error
-                .resize(400,400)                        // optional
-                .into(holder.UserImage);
-        //loadImage(Image[position],holder.UserImage);
+        }
     }
 
     private void loadImage(String url,NetworkImageView UserImage){
@@ -84,10 +86,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (Name[position] instanceof String) {
-            return ITEM_TYPE_HEADER;
-        } else {
+        if (position==0) {
             return ITEM_TYPE_NORMAL;
+        } else {
+            return ITEM_TYPE_HEADER;
         }
     }
 

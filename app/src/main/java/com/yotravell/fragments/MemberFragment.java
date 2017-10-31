@@ -75,7 +75,7 @@ public class MemberFragment extends Fragment {
                     public void onResponse(String response) {
                         mProgressDialog.dismiss();
                         try {
-                            //Log.e("response ",response);
+                            Log.e("response ",response);
                             //converting response to json object
                             if(response != null){
                                 JSONObject obj = new JSONObject(response);
