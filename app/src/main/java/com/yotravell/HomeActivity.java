@@ -1,6 +1,5 @@
 package com.yotravell;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +24,6 @@ import com.yotravell.VolleyService.AppController;
 import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
 import com.yotravell.fragments.MemberFragment;
-import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
 
 public class HomeActivity extends AppCompatActivity
@@ -110,11 +108,9 @@ public class HomeActivity extends AppCompatActivity
         if(position >0){
             Fragment mFrgObj = null;
             mFrgObj  = new HomeFragment();
-
             if(mFrgObj != null ){
                 attachFragmentOnUi(mFrgObj, "");
             }
-
         }*/
     }
 
@@ -174,8 +170,8 @@ public class HomeActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.home, menu);
         //memberCount = (ClipData.Item) menu.findItem(R.id.nav_members_list);
         //friendCount = (ClipData.Item) menu.findItem(R.id.nav_friends_list);
-  //      menu.getItem(1).setTitle(R.string.menu_member+" ("+AppController.aSessionUserData.getTotalMember()+")");
-    //    menu.getItem(2).setTitle(R.string.menu_friend+" ("+AppController.aSessionUserData.getTotalFriend()+")");
+        //      menu.getItem(1).setTitle(R.string.menu_member+" ("+AppController.aSessionUserData.getTotalMember()+")");
+        //    menu.getItem(2).setTitle(R.string.menu_friend+" ("+AppController.aSessionUserData.getTotalFriend()+")");
         return true;
     }
 
@@ -203,15 +199,10 @@ public class HomeActivity extends AppCompatActivity
         /*if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
         } else if (id == R.id.nav_slideshow) {
-
         } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_send) {
-
         }*/
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
