@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -106,56 +107,47 @@ public class ForgetOtpValidateActivity extends AppCompatActivity implements View
         }
         return false;
     }
-
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("otp", strOTP);
+        params.put("email", strEmail);
+        return params;
+    }
     private void forgetOTPWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.FORGOTOTP_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            //Log.e("Response in try  : ",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                if(obj.getString("status").equals("1")){
-                                    CommonUtils.clearForm(forgotOTPForm);
-                                    SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).deleteForgotEmail();
-                                    SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).setResetUserId(obj.getInt("user_id"));
-                                    Intent intent = new Intent(ForgetOtpValidateActivity.this, ResetPasswordActivity.class);
-                                    intent.putExtra("message",obj.getString("message").toString());
-                                    startActivity(intent);
-                                }else{
-                                    CommonUtils.setErrorOnView(edtForgetOtp, obj.getString("message").toString());
-                                    CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                }
-                            }else{
-                                CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-                            //Log.e("Response in try  : ",response);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        //CommonUtils.ShowToastMessages(ForgetOtpValidateActivity.this,error.getMessage()+" service error  ");
-                    }
-                }) {
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.FORGOTOTP_URL, getParams(), new VolleyCallback() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("otp", strOTP);
-                params.put("email", strEmail);
-                return params;
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    //Log.e("Response in try  : ",response);
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getString("status").equals("1")){
+                            CommonUtils.clearForm(forgotOTPForm);
+                            SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).deleteForgotEmail();
+                            SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).setResetUserId(obj.getInt("user_id"));
+                            Intent intent = new Intent(ForgetOtpValidateActivity.this, ResetPasswordActivity.class);
+                            intent.putExtra("message",obj.getString("message").toString());
+                            startActivity(intent);
+                        }else{
+                            CommonUtils.setErrorOnView(edtForgetOtp, obj.getString("message").toString());
+                            CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                        }
+                    }else{
+                        CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                    }
+                    //Log.e("Response in try  : ",response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
             }
-        };
-
-        AppController.getInstance().addToRequestQueue(stringRequest);
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+            }
+        });
     }
 }

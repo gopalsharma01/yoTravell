@@ -4,11 +4,19 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.User;
 import com.yotravell.utils.SharedPrefrenceManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Developer on 9/21/2017.
@@ -72,5 +80,38 @@ public class AppController extends Application {
      */
     public static void getSessionData(Context mCtx){
         aSessionUserData = SharedPrefrenceManager.getInstance(mCtx).getUserDetails();
+    }
+
+    /**
+     * Function use to call webService through Volley API
+     * @param method (request method)
+     * @param url (service url)
+     * @param paramsData (service Parameters)
+     * @param callback (volleyCallback object for response and error)
+     * @return none
+     */
+    public void callVollayWebService(int method, String url, final Map<String, String> paramsData, final VolleyCallback callback){
+        StringRequest stringRequest = new StringRequest(method, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        callback.onSuccessResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onErrorResponse(error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params = paramsData;
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(stringRequest);
     }
 }

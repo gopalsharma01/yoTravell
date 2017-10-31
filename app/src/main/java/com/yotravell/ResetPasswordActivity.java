@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -113,56 +114,44 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         return false;
     }
 
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", intUserId.toString());
+        params.put("password", strPassword);
+        return params;
+    }
     private void resetWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.RESETPASS_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            //Log.e("Response in try  : ",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                if(obj.getString("status").equals("1")){
-                                    CommonUtils.clearForm(resetPassForm);
-                                    SharedPrefrenceManager.getInstance(ResetPasswordActivity.this).deleteResetUserId();
-                                    Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.putExtra("message",obj.getString("message").toString());
-                                    startActivity(intent);
-                                }else{
-                                    //CommonUtils.ShowToastMessages(getApplicationContext(),obj.getString("message").toString());
-                                    CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                }
-                            }else{
-                                //CommonUtils.ShowToastMessages(ResetPasswordActivity.this,getString(R.string.error_message));
-                                CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.RESETPASS_URL, getParams(), new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getString("status").equals("1")){
+                            CommonUtils.clearForm(resetPassForm);
+                            SharedPrefrenceManager.getInstance(ResetPasswordActivity.this).deleteResetUserId();
+                            Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("message",obj.getString("message").toString());
+                            startActivity(intent);
+                        }else{
+                            CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
                         }
-                        //Log.e("tag","newmessage");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        //CommonUtils.ShowToastMessages(getApplicationContext(),error.getMessage()+" service error  ");
+                    }else{
                         CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
                     }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("user_id", intUserId.toString());
-                params.put("password", strPassword);
-                return params;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
             }
-        };
-
-        AppController.getInstance().addToRequestQueue(stringRequest);
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+            }
+        });
     }
 }

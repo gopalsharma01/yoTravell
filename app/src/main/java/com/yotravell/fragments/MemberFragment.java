@@ -24,6 +24,7 @@ import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.adapter.MemberAdapter;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Members;
 import com.yotravell.utils.CommonUtils;
 
@@ -68,55 +69,47 @@ public class MemberFragment extends Fragment {
      * @params none;
      * @return void;
      */
-    public void memberWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.MEMBER_LIST_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            Log.e("response ",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                Gson gson = new Gson();
-                                if(obj.getString("status").equals("1")){
-                                    //ResponseModel aResponse =  gson.fromJson(response, ResponseModel.class);
-                                    Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
-                                    //aResponse = Arrays.asList(aMemberLst);
-                                    aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
-                                    //Log.e("Member name",aResponse.get(0).getEmail());
-                                    setMemberListAdapter();
-                                }else{
-                                    CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                    //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
-                                }
-                            }else{
-                                CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        //CommonUtils.ShowToastMessages(LoginActivity.this,error.getMessage()+" service error  ");
-                        //CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("user_id", String.valueOf(AppController.aSessionUserData.getId()));
-                return params;
-            }
-        };
 
-        AppController.getInstance().addToRequestQueue(stringRequest);
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", String.valueOf(AppController.aSessionUserData.getId()));
+        return params;
+    }
+    public void memberWebService(){
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.MEMBER_LIST_URL, getParams(), new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    Log.e("response ",response);
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        Gson gson = new Gson();
+                        if(obj.getString("status").equals("1")){
+                            //ResponseModel aResponse =  gson.fromJson(response, ResponseModel.class);
+                            Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
+                            //aResponse = Arrays.asList(aMemberLst);
+                            aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
+                            //Log.e("Member name",aResponse.get(0).getEmail());
+                            setMemberListAdapter();
+                        }else{
+                            CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
+                        }
+                    }else{
+                        CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
+            }
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+            }
+        });
     }
     /**
      * this function use for validate login form.

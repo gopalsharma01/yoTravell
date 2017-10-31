@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Country;
 import com.yotravell.models.CountryList;
 import com.yotravell.networkUtils.InternetConnect;
@@ -160,27 +161,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
         return false;
     }
-
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        return params;
+    }
     private void regCountryWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.COUNTRY_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        //Log.e("country list", response);
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.COUNTRY_URL, getParams(), new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                //Log.e("country list", response);
 
-                        try {
-                            //converting response to json object
-                            if(response != null){
-                                Gson gson = new Gson();
-                                country =  gson.fromJson(response, Country.class);
-                                List<String> countries = new ArrayList<String>();
-                                countries.add("Select Country");
-                                if(country != null && country.getaCountryList() != null ){
-                                    for(int i =0; i <country.getaCountryList().size(); i++){
-                                        countries.add(country.getaCountryList().get(i).getName());
-                                    }
-                                }
+                try {
+                    //converting response to json object
+                    if(response != null){
+                        Gson gson = new Gson();
+                        country =  gson.fromJson(response, Country.class);
+                        List<String> countries = new ArrayList<String>();
+                        countries.add("Select Country");
+                        if(country != null && country.getaCountryList() != null ){
+                            for(int i =0; i <country.getaCountryList().size(); i++){
+                                countries.add(country.getaCountryList().get(i).getName());
+                            }
+                        }
                                 /*JSONObject obj = new JSONObject(response);
                                 if(obj.getJSONObject("status").equals('1')) {
                                     List<String> countries = new ArrayList<String>();
@@ -191,103 +194,85 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                         }
                                     }
                                 }*/
-                                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(RegisterActivity.this, R.layout.country_spinner_layout, countries);
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(RegisterActivity.this, R.layout.country_spinner_layout, countries);
 
-                                // Drop down layout style - list view with radio button
-                                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                // attaching data adapter to spinner
-                                spnrCountry.setAdapter(dataAdapter);
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        // attaching data adapter to spinner
+                        spnrCountry.setAdapter(dataAdapter);
 
                                 /*ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,android.R.layout.simple_spinner_dropdown_item, countries);
                                 MaterialBetterSpinner materialDesignSpinner = (MaterialBetterSpinner) findViewById(R.id.countryList);
                                // materialDesignSpinner.setBackgroundResource(R.drawable.background);
                                 materialDesignSpinner.setAdapter(countryAdapter);*/
 
-                            }
-                            //Log.e("Response in try  : ",response);
-                        } catch (Exception e) {
-                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            e.printStackTrace();
-                        }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        //CommonUtils.ShowToastMessages(getApplicationContext(),error.getMessage()+" service error  ");
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                return params;
+                    //Log.e("Response in try  : ",response);
+                } catch (Exception e) {
+                    CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                    e.printStackTrace();
+                }
             }
-        };
-
-        AppController.getInstance().addToRequestQueue(stringRequest);
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                //CommonUtils.ShowToastMessages(getApplicationContext(),error.getMessage()+" service error  ");
+            }
+        });
     }
-
+    private Map<String, String> getRegParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("name", strName);
+        params.put("username", strUserName);
+        params.put("email", strEmail);
+        params.put("password", strPassword);
+        params.put("country", strCountry);
+        params.put("city", strCity);
+        params.put("weather", strWeather);
+        return params;
+    }
     private void regWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.REG_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            Log.e("response",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                if(obj.getString("status").equals("1")){
-                                    CommonUtils.clearForm(signUp);
-                                    CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.success),getString(R.string.register_success_title),obj.getString("message"),getString(R.string.ok));
-                                    //finish();
-                                    //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                                }else{
-                                    if(obj.has("username")){
-                                        CommonUtils.setErrorOnView(edtUserName,obj.getString("message"));
-                                    }else if(obj.has("email")){
-                                        CommonUtils.setErrorOnView(edtEmail,obj.getString("message"));
-                                    }
-
-                                    CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                    //CommonUtils.ShowToastMessages(RegisterActivity.this,obj.getJSONObject("message").toString());
-                                }
-                            }else{
-                                CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                                //CommonUtils.ShowToastMessages(RegisterActivity.this,getString(R.string.error_message));
-                            }
-                            //Log.e("Response in try  : ",response);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //Log.e("Response in try  : ","incatch");
-                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                    }
-                }) {
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.REG_URL, getRegParams(), new VolleyCallback() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("name", strName);
-                params.put("username", strUserName);
-                params.put("email", strEmail);
-                params.put("password", strPassword);
-                params.put("country", strCountry);
-                params.put("city", strCity);
-                params.put("weather", strWeather);
-                return params;
-            }
-        };
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    Log.e("response",response);
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getString("status").equals("1")){
+                            CommonUtils.clearForm(signUp);
+                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.success),getString(R.string.register_success_title),obj.getString("message"),getString(R.string.ok));
+                            //finish();
+                            //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        }else{
+                            if(obj.has("username")){
+                                CommonUtils.setErrorOnView(edtUserName,obj.getString("message"));
+                            }else if(obj.has("email")){
+                                CommonUtils.setErrorOnView(edtEmail,obj.getString("message"));
+                            }
 
-        AppController.getInstance().addToRequestQueue(stringRequest);
+                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            //CommonUtils.ShowToastMessages(RegisterActivity.this,obj.getJSONObject("message").toString());
+                        }
+                    }else{
+                        CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                        //CommonUtils.ShowToastMessages(RegisterActivity.this,getString(R.string.error_message));
+                    }
+                    //Log.e("Response in try  : ",response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //Log.e("Response in try  : ","incatch");
+                    CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
+            }
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+            }
+        });
     }
 }

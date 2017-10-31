@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.User;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
@@ -129,85 +130,77 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         }
         return false;
     }
-
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("username", strLogUsername);
+        params.put("password", strLogPass);
+        params.put("devicetoken", CommonUtils.getDeviceToken(LoginActivity.this));
+        params.put("devicetype", "Android");
+        return params;
+    }
     private void loginWebService(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.LOGIN_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            Log.e("response ",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                Gson gson = new Gson();
-                                Log.e("response ",obj.toString());
-                                if(obj.getString("status").equals("1")){
-                                    User userDetail =  gson.fromJson(obj.getJSONObject("UserData").toString(), User.class);
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.LOGIN_URL, getParams(), new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    Log.e("response ",response);
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        Gson gson = new Gson();
+                        Log.e("response ",obj.toString());
+                        if(obj.getString("status").equals("1")){
+                            User userDetail =  gson.fromJson(obj.getJSONObject("UserData").toString(), User.class);
 
-                                    //creating a new user object
+                            //creating a new user object
                                     /*User user = new User(
                                             userJson.getInt("id"),
                                             userJson.getString("username"),
                                             userJson.getString("email"),
                                             userJson.getString("gender")
                                     );*/
-                                    //storing the user in shared preferences
-                                    SharedPrefrenceManager.getInstance(LoginActivity.this).setUserDetails(userDetail);
-                                    AppController.getSessionData(getApplicationContext());
-                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                                    finish();
-                                }else{
-                                    CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                    //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
-                                }
-                            }else{
-                                CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-
-                            //Log.e("Response in try  : ",response);
-
-                            //if no error in response
-                            //if (!obj.getBoolean("error")) {
-                                //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                                //getting the user from the response
-                                //JSONObject userJson = obj.getJSONObject("user");
-
-
-                                //starting the profile activity
-                                //finish();
-                                //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            //} else {
-                                //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            //}
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                            //storing the user in shared preferences
+                            SharedPrefrenceManager.getInstance(LoginActivity.this).setUserDetails(userDetail);
+                            AppController.getSessionData(getApplicationContext());
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            finish();
+                        }else{
+                            CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        //CommonUtils.ShowToastMessages(LoginActivity.this,error.getMessage()+" service error  ");
+                    }else{
                         CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
                     }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", strLogUsername);
-                params.put("password", strLogPass);
-                params.put("devicetoken", CommonUtils.getDeviceToken(LoginActivity.this));
-                params.put("devicetype", "Android");
-                return params;
-            }
-        };
 
-        AppController.getInstance().addToRequestQueue(stringRequest);
+                    //Log.e("Response in try  : ",response);
+
+                    //if no error in response
+                    //if (!obj.getBoolean("error")) {
+                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    //getting the user from the response
+                    //JSONObject userJson = obj.getJSONObject("user");
+
+
+                    //starting the profile activity
+                    //finish();
+                    //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    //} else {
+                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    //}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
+            }
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                //CommonUtils.ShowToastMessages(LoginActivity.this,error.getMessage()+" service error  ");
+                CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+            }
+        });
     }
 
 }

@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -101,63 +102,53 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
         }
         return false;
     }
-
+    private Map<String, String> getParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("email", strEmail);
+        return params;
+    }
     private void forgetWebService(){
-        Log.e("Response in try  : ","call webservice");
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, WebServiceConstant.FORGOTPASS_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        mProgressDialog.dismiss();
-                        try {
-                            Log.e("Response in try  : ",response);
-                            //converting response to json object
-                            if(response != null){
-                                JSONObject obj = new JSONObject(response);
-                                if(obj.getString("status").equals("1")){
-                                    CommonUtils.clearForm(forgotForm);
-                                    SharedPrefrenceManager.getInstance(ForgetPasswordActivity.this).setForgotEmail(strEmail);
-                                    //finish();
-                                    Intent intent = new Intent(ForgetPasswordActivity.this, ForgetOtpValidateActivity.class);
-                                    intent.putExtra("message",obj.getString("message"));
-                                    startActivity(intent);
-                                }else{
-                                    if(obj.has("email")) {
-                                        CommonUtils.setErrorOnView(edtEmail, obj.getString("message"));
-                                    }
-                                    CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
-                                    //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,obj.getString("message"));
-                                }
-                            }else{
-                                //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,getString(R.string.error_message));
-                                CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                            }
-                            //Log.e("Response in try  : ",response);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //Log.e("tag","error");
-                            CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
-                        Log.e("Response in try  : ","rerror in response");
-
-                        CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
-                        //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,error.getMessage()+" service error  ");
-                    }
-                }) {
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.FORGOTPASS_URL, getParams(), new VolleyCallback() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", strEmail);
-                return params;
+            public void onSuccessResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    Log.e("Response in try  : ",response);
+                    //converting response to json object
+                    if(response != null){
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getString("status").equals("1")){
+                            CommonUtils.clearForm(forgotForm);
+                            SharedPrefrenceManager.getInstance(ForgetPasswordActivity.this).setForgotEmail(strEmail);
+                            //finish();
+                            Intent intent = new Intent(ForgetPasswordActivity.this, ForgetOtpValidateActivity.class);
+                            intent.putExtra("message",obj.getString("message"));
+                            startActivity(intent);
+                        }else{
+                            if(obj.has("email")) {
+                                CommonUtils.setErrorOnView(edtEmail, obj.getString("message"));
+                            }
+                            CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,obj.getString("message"));
+                        }
+                    }else{
+                        //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,getString(R.string.error_message));
+                        CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                    }
+                    //Log.e("Response in try  : ",response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //Log.e("tag","error");
+                    CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+                }
             }
-        };
+            @Override
+            public void onErrorResponse(String result) {
+                mProgressDialog.dismiss();
+                Log.e("Response in try  : ","rerror in response");
 
-        AppController.getInstance().addToRequestQueue(stringRequest);
+                CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
+            }
+        });
     }
 }
