@@ -5,9 +5,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -15,7 +20,9 @@ import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.User;
 import com.yotravell.utils.SharedPrefrenceManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,7 +88,16 @@ public class AppController extends Application {
     public static void getSessionData(Context mCtx){
         aSessionUserData = SharedPrefrenceManager.getInstance(mCtx).getUserDetails();
     }
-
+    /**
+     * Function use to manage all parameters
+     * @param aParamList ()
+     * @return none
+     */
+    public static Map<String, String> getParams(Map<String, String> aParamList){
+        Map<String, String> params = new HashMap<>();
+        //params.put("user_id", String.valueOf(AppController.aSessionUserData.getId()));
+        return params;
+    }
     /**
      * Function use to call webService through Volley API
      * @param method (request method)
@@ -102,13 +118,30 @@ public class AppController extends Application {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         callback.onErrorResponse(error.getMessage());
+                        /**
+                         * handle Volley Error
+                         */
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+
+                            /*showSnackBar(parentLayout, getString(R.string.internet_not_found), getString(R.string.retry), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    //handle retry button
+
+                                }
+                            });*/
+
+                        } else if (error instanceof AuthFailureError) {
+                        } else if (error instanceof ServerError) {
+                        } else if (error instanceof NetworkError) {
+                        } else if (error instanceof ParseError) {
+                        }
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params = paramsData;
-                return params;
+                return paramsData;
             }
         };
 

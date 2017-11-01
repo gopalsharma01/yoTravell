@@ -19,9 +19,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -116,19 +118,21 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                     Log.e("Response in try  : ",response);
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
-                        if(obj.getString("status").equals("1")){
+                        Gson gson = new Gson();
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        //JSONObject obj = new JSONObject(response);
+                        if(responseData.getStatus().toString().equals("1")){//obj.getString("status").equals("1")
                             CommonUtils.clearForm(forgotForm);
                             SharedPrefrenceManager.getInstance(ForgetPasswordActivity.this).setForgotEmail(strEmail);
                             //finish();
                             Intent intent = new Intent(ForgetPasswordActivity.this, ForgetOtpValidateActivity.class);
-                            intent.putExtra("message",obj.getString("message"));
+                            intent.putExtra("message",responseData.getMessage());
                             startActivity(intent);
                         }else{
-                            if(obj.has("email")) {
-                                CommonUtils.setErrorOnView(edtEmail, obj.getString("message"));
+                            if(!responseData.getEmail().equals("")) {//obj.has("email")
+                                CommonUtils.setErrorOnView(edtEmail, responseData.getMessage());
                             }
-                            CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(ForgetPasswordActivity.this,getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                             //CommonUtils.ShowToastMessages(ForgetPasswordActivity.this,obj.getString("message"));
                         }
                     }else{

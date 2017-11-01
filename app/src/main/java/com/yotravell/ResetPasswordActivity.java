@@ -18,9 +18,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -128,16 +130,18 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
                 try {
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
-                        if(obj.getString("status").equals("1")){
+                        //JSONObject obj = new JSONObject(response);
+                        Gson gson = new Gson();
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        if(responseData.getStatus().toString().equals("1")){
                             CommonUtils.clearForm(resetPassForm);
                             SharedPrefrenceManager.getInstance(ResetPasswordActivity.this).deleteResetUserId();
                             Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra("message",obj.getString("message").toString());
+                            intent.putExtra("message",responseData.getMessage().toString());
                             startActivity(intent);
                         }else{
-                            CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                         }
                     }else{
                         CommonUtils.showAlertMessage(ResetPasswordActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));

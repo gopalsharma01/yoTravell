@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.models.User;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
@@ -144,51 +145,36 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
             public void onSuccessResponse(String response) {
                 mProgressDialog.dismiss();
                 try {
-                    Log.e("response ",response);
+                    //Log.e("response ",response);
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
+                        //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
-                        Log.e("response ",obj.toString());
-                        if(obj.getString("status").equals("1")){
-                            User userDetail =  gson.fromJson(obj.getJSONObject("UserData").toString(), User.class);
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        //Log.e("response ",obj.toString());
 
+                        if(responseData.getStatus().toString().equals("1")){
+                        //if(obj.getString("status").equals("1")){
+                            //User userDetail =  gson.fromJson(obj.getJSONObject("UserData").toString(), User.class);
                             //creating a new user object
-                                    /*User user = new User(
-                                            userJson.getInt("id"),
-                                            userJson.getString("username"),
-                                            userJson.getString("email"),
-                                            userJson.getString("gender")
+                            /*User user = new User(
+                            userJson.getInt("id"),
+                                    userJson.getString("username"),
+                                    userJson.getString("email"),
+                                    userJson.getString("gender")
                                     );*/
                             //storing the user in shared preferences
-                            SharedPrefrenceManager.getInstance(LoginActivity.this).setUserDetails(userDetail);
+                            SharedPrefrenceManager.getInstance(LoginActivity.this).setUserDetails(responseData.getUserData());
                             AppController.getSessionData(getApplicationContext());
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             finish();
                         }else{
-                            CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                             //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
                         }
                     }else{
                         CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
                     }
-
-                    //Log.e("Response in try  : ",response);
-
-                    //if no error in response
-                    //if (!obj.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                    //getting the user from the response
-                    //JSONObject userJson = obj.getJSONObject("user");
-
-
-                    //starting the profile activity
-                    //finish();
-                    //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    //} else {
-                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    //}
                 } catch (Exception e) {
                     e.printStackTrace();
                     CommonUtils.showAlertMessage(LoginActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));

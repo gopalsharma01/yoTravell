@@ -26,6 +26,7 @@ import com.yotravell.adapter.MemberAdapter;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Members;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.utils.CommonUtils;
 
 import org.json.JSONObject;
@@ -82,17 +83,16 @@ public class FriendsFragment extends Fragment {
                     //Log.e("response ",response);
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
+                        //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
-                        if(obj.getString("status").equals("1")){
-                            //ResponseModel aResponse =  gson.fromJson(response, ResponseModel.class);
-                            Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
-                            //aResponse = Arrays.asList(aMemberLst);
-                            aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
-                            //Log.e("Member name",aResponse.get(0).getEmail());
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        if(responseData.getStatus().toString().equals("1")){//obj.getString("status").equals("1")
+                            //Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
+                            //aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
+                            aResponse = responseData.getaUsersList();
                             setFriendsListAdapter();
                         }else{
-                            CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                             //CommonUtils.ShowToastMessages(LoginActivity.this,"User name password is invalid, Please try again.");
                         }
                     }else{

@@ -28,6 +28,7 @@ import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Country;
 import com.yotravell.models.CountryList;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.ValidationUtils;
@@ -241,20 +242,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Log.e("response",response);
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
-                        if(obj.getString("status").equals("1")){
+                        //JSONObject obj = new JSONObject(response);
+                        Gson gson = new Gson();
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        if(responseData.getStatus().toString().equals("1")){
                             CommonUtils.clearForm(signUp);
-                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.success),getString(R.string.register_success_title),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.success),getString(R.string.register_success_title),responseData.getMessage(),getString(R.string.ok));
                             //finish();
                             //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         }else{
-                            if(obj.has("username")){
-                                CommonUtils.setErrorOnView(edtUserName,obj.getString("message"));
-                            }else if(obj.has("email")){
-                                CommonUtils.setErrorOnView(edtEmail,obj.getString("message"));
+                            if(!responseData.getUsername().equals("")){//obj.has("username")
+                                CommonUtils.setErrorOnView(edtUserName,responseData.getMessage());//obj.getString("message")
+                            }else if(!responseData.getEmail().toString().equals("")){//obj.has("email")
+                                CommonUtils.setErrorOnView(edtEmail,responseData.getMessage());//obj.getString("message")
                             }
 
-                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                             //CommonUtils.ShowToastMessages(RegisterActivity.this,obj.getJSONObject("message").toString());
                         }
                     }else{

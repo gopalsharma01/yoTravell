@@ -18,9 +18,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
+import com.yotravell.models.ResponseModel;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
@@ -119,25 +121,25 @@ public class ForgetOtpValidateActivity extends AppCompatActivity implements View
             public void onSuccessResponse(String response) {
                 mProgressDialog.dismiss();
                 try {
-                    //Log.e("Response in try  : ",response);
                     //converting response to json object
                     if(response != null){
-                        JSONObject obj = new JSONObject(response);
-                        if(obj.getString("status").equals("1")){
+                        //JSONObject obj = new JSONObject(response);
+                        Gson gson = new Gson();
+                        ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
+                        if(responseData.getStatus().toString().equals("1")){
                             CommonUtils.clearForm(forgotOTPForm);
                             SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).deleteForgotEmail();
-                            SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).setResetUserId(obj.getInt("user_id"));
+                            SharedPrefrenceManager.getInstance(ForgetOtpValidateActivity.this).setResetUserId(responseData.getUserId());
                             Intent intent = new Intent(ForgetOtpValidateActivity.this, ResetPasswordActivity.class);
-                            intent.putExtra("message",obj.getString("message").toString());
+                            intent.putExtra("message",responseData.getMessage().toString());
                             startActivity(intent);
                         }else{
-                            CommonUtils.setErrorOnView(edtForgetOtp, obj.getString("message").toString());
-                            CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),obj.getString("message"),getString(R.string.ok));
+                            CommonUtils.setErrorOnView(edtForgetOtp, responseData.getMessage().toString());
+                            CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                         }
                     }else{
                         CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
                     }
-                    //Log.e("Response in try  : ",response);
                 } catch (Exception e) {
                     e.printStackTrace();
                     CommonUtils.showAlertMessage(ForgetOtpValidateActivity.this,getString(R.string.error),getString(R.string.error),getString(R.string.error_message),getString(R.string.ok));
