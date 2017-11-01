@@ -1,7 +1,6 @@
 package com.yotravell;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,39 +12,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Country;
-import com.yotravell.models.CountryList;
 import com.yotravell.models.ResponseModel;
 import com.yotravell.networkUtils.InternetConnect;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.ValidationUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
-
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText edtName,edtUserName,edtEmail,edtPassword,edtCountry,edtCity,edtWeather;
+    private EditText edtName,edtUserName,edtEmail,edtPassword,edtCity,edtWeather;
 
     private String strName,strUserName,strEmail,strPassword,strCountry,strCity,strWeather;
     private TextView txtCountry;
@@ -53,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button btnRegSubmit;
     private Spinner spnrCountry;
     private ProgressDialog mProgressDialog;
-    private Intent intent;
     private ViewGroup signUp;
     Country country;
     @Override
@@ -96,8 +83,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
     /**
      * when we click on register submit button, this function call on click.
-     * @params none;
-     * @return void;
      */
     private void regAction(){
         edtName = (EditText) findViewById(R.id.edtRegName);
@@ -133,7 +118,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
     /**
      * this function use for validate registration form.
-     * @params none;
      * @return boolean true/false;
      */
     private boolean regValidate(){
@@ -162,9 +146,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
         return false;
     }
-    private Map<String, String> getParams(){
-        Map<String, String> params = new HashMap<>();
-        return params;
+    private Map<String,String> getParams(){
+        return new HashMap<>();
     }
     private void regCountryWebService(){
         AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.COUNTRY_URL, getParams(), new VolleyCallback() {
@@ -178,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if(response != null){
                         Gson gson = new Gson();
                         country =  gson.fromJson(response, Country.class);
-                        List<String> countries = new ArrayList<String>();
+                        List<String> countries = new ArrayList<>();
                         countries.add("Select Country");
                         if(country != null && country.getaCountryList() != null ){
                             for(int i =0; i <country.getaCountryList().size(); i++){
@@ -195,7 +178,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                         }
                                     }
                                 }*/
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(RegisterActivity.this, R.layout.country_spinner_layout, countries);
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(RegisterActivity.this, R.layout.country_spinner_layout, countries);
 
                         // Drop down layout style - list view with radio button
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -245,7 +228,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
-                        if(responseData.getStatus().toString().equals("1")){
+                        if(responseData.getStatus().equals("1")){
                             CommonUtils.clearForm(signUp);
                             CommonUtils.showAlertMessage(RegisterActivity.this,getString(R.string.success),getString(R.string.register_success_title),responseData.getMessage(),getString(R.string.ok));
                             //finish();
@@ -253,7 +236,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         }else{
                             if(!responseData.getUsername().equals("")){//obj.has("username")
                                 CommonUtils.setErrorOnView(edtUserName,responseData.getMessage());//obj.getString("message")
-                            }else if(!responseData.getEmail().toString().equals("")){//obj.has("email")
+                            }else if(!responseData.getEmail().equals("")){//obj.has("email")
                                 CommonUtils.setErrorOnView(edtEmail,responseData.getMessage());//obj.getString("message")
                             }
 

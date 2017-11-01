@@ -9,16 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
@@ -29,10 +24,7 @@ import com.yotravell.models.Members;
 import com.yotravell.models.ResponseModel;
 import com.yotravell.utils.CommonUtils;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +45,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_member, container, false);
 
-        recyclerView= (RecyclerView) view.findViewById(R.id.member_recycler_view);
+        recyclerView= view.findViewById(R.id.member_recycler_view);
 
         mProgressDialog = CommonUtils.ProgressBar(getActivity(), "");
         mProgressDialog.show();
@@ -66,7 +58,6 @@ public class FriendsFragment extends Fragment {
     }
     /**
      * this function use for get all member list.
-     * @params none;
      * @return void;
      */
     private Map<String, String> getParams(){
@@ -86,7 +77,7 @@ public class FriendsFragment extends Fragment {
                         //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
-                        if(responseData.getStatus().toString().equals("1")){//obj.getString("status").equals("1")
+                        if(responseData.getStatus().equals("1")){//obj.getString("status").equals("1")
                             //Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
                             //aResponse = new ArrayList<Members>(Arrays.asList(aMemberLst));
                             aResponse = responseData.getaUsersList();
@@ -111,8 +102,6 @@ public class FriendsFragment extends Fragment {
     }
     /**
      * this function use for validate login form.
-     * @params none;
-     * @return boolean true/false;
      */
     public void setFriendsListAdapter(){
         adapter=new MemberAdapter(getActivity(),aResponse,"Friends");

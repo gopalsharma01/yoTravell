@@ -20,9 +20,7 @@ import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.User;
 import com.yotravell.utils.SharedPrefrenceManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -82,8 +80,7 @@ public class AppController extends Application {
 
     /**
      * Get Session User Details
-     * @param mCtx
-     * @return User model object
+     * @param mCtx (Context object)
      */
     public static void getSessionData(Context mCtx){
         aSessionUserData = SharedPrefrenceManager.getInstance(mCtx).getUserDetails();
@@ -104,7 +101,7 @@ public class AppController extends Application {
      * @param url (service url)
      * @param paramsData (service Parameters)
      * @param callback (volleyCallback object for response and error)
-     * @return none
+     * @return void;
      */
     public void callVollayWebService(int method, String url, final Map<String, String> paramsData, final VolleyCallback callback){
         StringRequest stringRequest = new StringRequest(method, url,
