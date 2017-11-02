@@ -10,17 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
@@ -32,7 +24,6 @@ import com.yotravell.utils.CommonUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,11 +36,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
     static final String TAG = "FRIEND LIST ADAPTER**";
     private static ArrayList<Members> aMembers;
     private String type;
+    private static ProgressDialog progressDialog;
 
     public MemberAdapter(Context context, ArrayList<Members> aMembers,String type) {
         this.context = context;
         this.aMembers = aMembers;
         this.type = type;
+        progressDialog = CommonUtils.ProgressBar(context, "");;
     }
 
     @Override
@@ -61,34 +54,124 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MemberAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MemberAdapter.ViewHolder holder, final int position) {
         //Log.d(TAG, "Holder " + position);
 
         holder.name.setText(this.aMembers.get(position).getName());
         holder.lastActivity.setText(this.aMembers.get(position).getLastActivity());
         //Log.e(TAG, "Holder User image :  " + this.aMembers.get(position).getProfileImage().toString().trim());
         Picasso.with(context)
-                .load(this.aMembers.get(position).getProfileImage().toString().trim())//"http://i.imgur.com/DvpvklR.png")
+                .load(this.aMembers.get(position).getProfileImage().trim())//"http://i.imgur.com/DvpvklR.png")
                 .placeholder(R.drawable.ic_placeholder)   // optional
                 .error(R.drawable.ic_user)      // optional  ic_error
                 .resize(400,400)                        // optional
                 .into(holder.UserImage);
         //Log.d(TAG, "User Id " + this.aMembers.get(position).getId()+" current user id "+AppController.aSessionUserData.getId());
-        if(this.aMembers.get(position).getFriendRequest().toString().equals("")){
+        if(this.aMembers.get(position).getFriendRequest().equals("")){
             if(!this.aMembers.get(position).getId().toString().equals(AppController.aSessionUserData.getId().toString())){
                 //Log.e(TAG, " gopal sharma");
                 holder.addFriend.setVisibility(View.VISIBLE);
             }
-        }else if(this.aMembers.get(position).getFriendRequest().toString().equals("0")){
+        }else if(this.aMembers.get(position).getFriendRequest().equals("0")){
             if(this.aMembers.get(position).getRequestSender().toString().equals("1")){
                 holder.cancelRequest.setVisibility(View.VISIBLE);
             }else{
                 holder.requestAction.setVisibility(View.VISIBLE);
             }
-        }else if(this.aMembers.get(position).getFriendRequest().toString().equals("1")){
+        }else if(this.aMembers.get(position).getFriendRequest().equals("1")){
             holder.cancelFriendShip.setVisibility(View.VISIBLE);
         }
+
+        /*holder.cancelFriendShip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, String> params = new HashMap<>();
+                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
+                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view);
+            }
+        });
+        holder.cancelRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, String> params = new HashMap<>();
+                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
+                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view);
+            }
+        });
+        holder.addFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, String> params = new HashMap<>();
+                params.put("sender_id", String.valueOf(AppController.aSessionUserData.getId()));
+                params.put("receiver_id", String.valueOf(aMembers.get(position).getId()));
+                requestServiceCall(WebServiceConstant.SEND_FRIEND_REQUEST,params,position,view);
+            }
+        });
+        holder.requestAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //requestServiceCall();
+            }
+        });
+        holder.requestReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, String> params = new HashMap<>();
+                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
+                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view,holder.requestReject);
+            }
+        });*/
     }
+    /*private void requestServiceCall(String url, final Map<String, String> params, final int position,View iView,View cRequest){
+        AppController.getInstance().callVollayWebService(Request.Method.POST, url, params, new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String response) {
+                try {
+                    progressDialog.dismiss();
+                    if(response != null){
+                        Log.e("response in member request",response);
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getString("status").equals("1")){
+                            if(obj.has("requestId")){
+                                aMembers.get(position).setRequestId(obj.getInt("requestId"));
+                            }
+                            if (iView.getId() == cancelRequest.getId() || iView.getId() == requestReject.getId() || iView.getId() == cancelFriendShip.getId()){
+                                if(iView.getId() == requestReject.getId()){
+                                    requestAction.setVisibility(View.GONE);
+                                }else{
+                                    iView.setVisibility(View.GONE);
+                                }
+                                addFriend.setVisibility(View.VISIBLE);
+                            } else if (iView.getId() == addFriend.getId()){
+                                iView.setVisibility(View.GONE);
+                                cancelRequest.setVisibility(View.VISIBLE);
+                            } else if (iView.getId() == requestAccept.getId()){
+                                requestAction.setVisibility(View.GONE);
+                                cancelFriendShip.setVisibility(View.VISIBLE);
+                            }
+                        }else{
+                            CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
+                        }
+                    }else{
+                        CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),String.valueOf(R.string.error_message),String.valueOf(R.string.ok));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onErrorResponse(String result) {
+                progressDialog.dismiss();
+                CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),result,String.valueOf(R.string.ok));
+            }
+        });
+    }*/
+    /*private void requestServiceCall(String) {
+        mFragment = new Mem();
+        mBundle = new Bundle();
+        mFragment.setArguments(mBundle);
+        switchContent(R.id.frag1, mFragment);
+    }*/
 
     @Override
     public int getItemCount() {
@@ -101,10 +184,12 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         private ImageView UserImage;
         private LinearLayout requestAction;
         private Button cancelRequest,cancelFriendShip,addFriend,requestAccept,requestReject;
-
+        private Context context;
 
         public ViewHolder(View v) {
             super(v);
+            context = v.getContext();
+
             name = (TextView) v.findViewById(R.id.txtUserName);
             UserImage = (ImageView) v.findViewById(R.id.userImg);
             lastActivity = (TextView) v.findViewById(R.id.txtLastLogin);
@@ -132,7 +217,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             if (v.getId() == cancelRequest.getId() || v.getId() == requestReject.getId() || v.getId() == cancelFriendShip.getId()){
                 //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
                 //Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-
                 params.put("request_id", String.valueOf(aMembers.get(getAdapterPosition()).getRequestId()));
                 url = WebServiceConstant.CANCEL_FRIEND_REQUEST;
             } else if (v.getId() == addFriend.getId()){
@@ -146,26 +230,43 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                 //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
             }
             if(url!=null){
-                callWebService(v.getContext(),url,params);
+                progressDialog.show();
+                callWebService(v.getContext(),url,params,getAdapterPosition(),v);
             }
         }
 
-        private void callWebService(Context con,String url,Map<String, String> params){
+        private void callWebService(Context con, String url, final Map<String, String> params, final int position, final View iView){
             AppController.getInstance().callVollayWebService(Request.Method.POST, url, params, new VolleyCallback() {
                 @Override
                 public void onSuccessResponse(String response) {
                     try {
+                        progressDialog.dismiss();
                         if(response != null){
                             Log.e("response in member request",response);
                             JSONObject obj = new JSONObject(response);
-                            Gson gson = new Gson();
                             if(obj.getString("status").equals("1")){
-                                Members[] aMemberLst =  gson.fromJson(obj.getString("aUsersList"), Members[].class);
+                                if(obj.has("requestId")){
+                                    aMembers.get(position).setRequestId(obj.getInt("requestId"));
+                                }
+                                if (iView.getId() == cancelRequest.getId() || iView.getId() == requestReject.getId() || iView.getId() == cancelFriendShip.getId()){
+                                    if(iView.getId() == requestReject.getId()){
+                                        requestAction.setVisibility(View.GONE);
+                                    }else{
+                                        iView.setVisibility(View.GONE);
+                                    }
+                                    addFriend.setVisibility(View.VISIBLE);
+                                } else if (iView.getId() == addFriend.getId()){
+                                    iView.setVisibility(View.GONE);
+                                    cancelRequest.setVisibility(View.VISIBLE);
+                                } else if (iView.getId() == requestAccept.getId()){
+                                    requestAction.setVisibility(View.GONE);
+                                    cancelFriendShip.setVisibility(View.VISIBLE);
+                                }
                             }else{
-
+                                CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
                             }
                         }else{
-
+                            CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),String.valueOf(R.string.error_message),String.valueOf(R.string.ok));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -173,7 +274,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                 }
                 @Override
                 public void onErrorResponse(String result) {
-
+                    progressDialog.dismiss();
+                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),result,String.valueOf(R.string.ok));
                 }
             });
         }
