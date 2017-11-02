@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ public class MemberFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Members> aResponse;
     private ProgressDialog mProgressDialog;
+    private ProgressBar mProgressBar;
 
     public static MemberFragment newInstance() {
         return new MemberFragment();
@@ -45,10 +47,11 @@ public class MemberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_member, container, false);
 
-        recyclerView= view.findViewById(R.id.member_recycler_view);
+        recyclerView = view.findViewById(R.id.member_recycler_view);
+        mProgressBar = view.findViewById(R.id.progressBar);
 
         mProgressDialog = CommonUtils.ProgressBar(getActivity(), "");
-        mProgressDialog.show();
+        //mProgressDialog.show();
 
         recyclerView.setHasFixedSize(true);
 
@@ -70,7 +73,7 @@ public class MemberFragment extends Fragment {
         AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.MEMBER_LIST_URL, getParams(), new VolleyCallback() {
             @Override
             public void onSuccessResponse(String response) {
-                mProgressDialog.dismiss();
+               // mProgressDialog.dismiss();
                 try {
                     //Log.e("response ",response);
                     //converting response to json object
@@ -110,5 +113,7 @@ public class MemberFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 }

@@ -81,97 +81,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         }else if(this.aMembers.get(position).getFriendRequest().equals("1")){
             holder.cancelFriendShip.setVisibility(View.VISIBLE);
         }
-
-        /*holder.cancelFriendShip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, String> params = new HashMap<>();
-                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
-                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view);
-            }
-        });
-        holder.cancelRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, String> params = new HashMap<>();
-                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
-                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view);
-            }
-        });
-        holder.addFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, String> params = new HashMap<>();
-                params.put("sender_id", String.valueOf(AppController.aSessionUserData.getId()));
-                params.put("receiver_id", String.valueOf(aMembers.get(position).getId()));
-                requestServiceCall(WebServiceConstant.SEND_FRIEND_REQUEST,params,position,view);
-            }
-        });
-        holder.requestAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //requestServiceCall();
-            }
-        });
-        holder.requestReject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, String> params = new HashMap<>();
-                params.put("request_id", String.valueOf(aMembers.get(position).getRequestId()));
-                requestServiceCall(WebServiceConstant.CANCEL_FRIEND_REQUEST,params,position,view,holder.requestReject);
-            }
-        });*/
     }
-    /*private void requestServiceCall(String url, final Map<String, String> params, final int position,View iView,View cRequest){
-        AppController.getInstance().callVollayWebService(Request.Method.POST, url, params, new VolleyCallback() {
-            @Override
-            public void onSuccessResponse(String response) {
-                try {
-                    progressDialog.dismiss();
-                    if(response != null){
-                        Log.e("response in member request",response);
-                        JSONObject obj = new JSONObject(response);
-                        if(obj.getString("status").equals("1")){
-                            if(obj.has("requestId")){
-                                aMembers.get(position).setRequestId(obj.getInt("requestId"));
-                            }
-                            if (iView.getId() == cancelRequest.getId() || iView.getId() == requestReject.getId() || iView.getId() == cancelFriendShip.getId()){
-                                if(iView.getId() == requestReject.getId()){
-                                    requestAction.setVisibility(View.GONE);
-                                }else{
-                                    iView.setVisibility(View.GONE);
-                                }
-                                addFriend.setVisibility(View.VISIBLE);
-                            } else if (iView.getId() == addFriend.getId()){
-                                iView.setVisibility(View.GONE);
-                                cancelRequest.setVisibility(View.VISIBLE);
-                            } else if (iView.getId() == requestAccept.getId()){
-                                requestAction.setVisibility(View.GONE);
-                                cancelFriendShip.setVisibility(View.VISIBLE);
-                            }
-                        }else{
-                            CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
-                        }
-                    }else{
-                        CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),String.valueOf(R.string.error_message),String.valueOf(R.string.ok));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onErrorResponse(String result) {
-                progressDialog.dismiss();
-                CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),result,String.valueOf(R.string.ok));
-            }
-        });
-    }*/
-    /*private void requestServiceCall(String) {
-        mFragment = new Mem();
-        mBundle = new Bundle();
-        mFragment.setArguments(mBundle);
-        switchContent(R.id.frag1, mFragment);
-    }*/
 
     @Override
     public int getItemCount() {
@@ -214,20 +124,18 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         public void onClick(View v) {
             Map<String, String> params = new HashMap<>();
             String url = null;
+            params.put("sender_id", String.valueOf(AppController.aSessionUserData.getId()));
+            params.put("receiver_id", String.valueOf(aMembers.get(getAdapterPosition()).getId()));
             if (v.getId() == cancelRequest.getId() || v.getId() == requestReject.getId() || v.getId() == cancelFriendShip.getId()){
                 //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
                 //Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
                 params.put("request_id", String.valueOf(aMembers.get(getAdapterPosition()).getRequestId()));
                 url = WebServiceConstant.CANCEL_FRIEND_REQUEST;
             } else if (v.getId() == addFriend.getId()){
-                //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
-                params.put("sender_id", String.valueOf(AppController.aSessionUserData.getId()));
-                params.put("receiver_id", String.valueOf(aMembers.get(getAdapterPosition()).getId()));
                 url = WebServiceConstant.SEND_FRIEND_REQUEST;
             } else if (v.getId() == requestAccept.getId()){
                 params.put("request_id", String.valueOf(aMembers.get(getAdapterPosition()).getRequestId()));
                 url = WebServiceConstant.ACCEPT_FRIEND_REQUEST;
-                //Log.e("reponse",String.valueOf(getAdapterPosition())+" "+aMembers.get(getAdapterPosition()).getName());
             }
             if(url!=null){
                 progressDialog.show();
@@ -242,7 +150,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                     try {
                         progressDialog.dismiss();
                         if(response != null){
-                            Log.e("response in member request",response);
+                            //Log.e("response in member request",response);
                             JSONObject obj = new JSONObject(response);
                             if(obj.getString("status").equals("1")){
                                 if(obj.has("requestId")){
@@ -263,7 +171,41 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                                     cancelFriendShip.setVisibility(View.VISIBLE);
                                 }
                             }else{
-                                CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
+                                if(obj.getString("status").equals("2")){
+                                    if(obj.has("actionType")){
+                                        if(obj.has("requestId")){
+                                            aMembers.get(position).setRequestId(obj.getInt("requestId"));
+                                        }else{
+                                            aMembers.get(position).setRequestId(null);
+                                        }
+                                        switch (obj.getString("actionType")){
+                                            case "addFriend":
+                                                if (iView.getId() == requestAccept.getId() || iView.getId() == requestReject.getId()){
+                                                    requestAction.setVisibility(View.GONE);
+                                                }else{
+                                                    iView.setVisibility(View.GONE);
+                                                }
+                                                addFriend.setVisibility(View.VISIBLE);
+                                                break;
+                                            case "CancelFriendShip":
+                                                iView.setVisibility(View.GONE);
+                                                cancelFriendShip.setVisibility(View.VISIBLE);
+                                                break;
+                                            case "CancelRequest":
+                                                iView.setVisibility(View.GONE);
+                                                cancelRequest.setVisibility(View.VISIBLE);
+                                                break;
+                                            case "requestAction":
+                                                iView.setVisibility(View.GONE);
+                                                requestAction.setVisibility(View.VISIBLE);
+                                                break;
+                                        }
+                                    }
+
+                                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.warning),String.valueOf(R.string.warning),obj.getString("message"),String.valueOf(R.string.ok));
+                                }else{
+                                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
+                                }
                             }
                         }else{
                             CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),String.valueOf(R.string.error_message),String.valueOf(R.string.ok));
