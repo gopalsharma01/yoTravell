@@ -24,6 +24,7 @@ import com.yotravell.VolleyService.AppController;
 import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
 import com.yotravell.fragments.MemberFragment;
+import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
 
 public class HomeActivity extends AppCompatActivity
@@ -195,6 +196,7 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         //int id = item.getItemId();
+        CommonUtils.hideKeyboard(HomeActivity.this);
         displayFragmentByPosition(item.getItemId());
         /*if (id == R.id.nav_camera) {
             // Handle the camera action
