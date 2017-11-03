@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.provider.Settings;
@@ -164,5 +165,16 @@ public class CommonUtils {
                 clearForm((ViewGroup) view);
             }
         }
+    }
+    /**
+     * Get Device window height and width
+     */
+    public static int getScreenWidth()
+    {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+    public static int getScreenHeight()
+    {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

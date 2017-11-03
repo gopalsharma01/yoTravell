@@ -140,6 +140,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             if(url!=null){
                 progressDialog.show();
                 callWebService(v.getContext(),url,params,getAdapterPosition(),v);
+                Log.e("Warning ",v.getResources().getString(R.string.warning)+" war "+v.getResources().getString(R.string.success)+" suc "+v.getResources().getString(R.string.info));
             }
         }
 
@@ -150,7 +151,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                     try {
                         progressDialog.dismiss();
                         if(response != null){
-                            //Log.e("response in member request",response);
+
                             JSONObject obj = new JSONObject(response);
                             if(obj.getString("status").equals("1")){
                                 if(obj.has("requestId")){
@@ -202,13 +203,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                                         }
                                     }
 
-                                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.warning),String.valueOf(R.string.warning),obj.getString("message"),String.valueOf(R.string.ok));
+                                    CommonUtils.showAlertMessage(context,context.getResources().getString(R.string.warning),context.getResources().getString(R.string.warning),obj.getString("message"),context.getResources().getString(R.string.ok));
+                                    //CommonUtils.showAlertMessage(context,"Warning","Warning",obj.getString("message"),"OK");
                                 }else{
-                                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),obj.getString("message"),String.valueOf(R.string.ok));
+                                    CommonUtils.showAlertMessage(context,context.getResources().getString(R.string.error),context.getResources().getString(R.string.error),obj.getString("message"),context.getResources().getString(R.string.ok));
                                 }
                             }
                         }else{
-                            CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),String.valueOf(R.string.error_message),String.valueOf(R.string.ok));
+                            CommonUtils.showAlertMessage(context,context.getResources().getString(R.string.error),context.getResources().getString(R.string.error),context.getResources().getString(R.string.error_message),context.getResources().getString(R.string.ok));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -217,7 +219,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                 @Override
                 public void onErrorResponse(String result) {
                     progressDialog.dismiss();
-                    CommonUtils.showAlertMessage(context,String.valueOf(R.string.error),String.valueOf(R.string.error),result,String.valueOf(R.string.ok));
+                    CommonUtils.showAlertMessage(context,context.getResources().getString(R.string.error),context.getResources().getString(R.string.error),result,context.getResources().getString(R.string.ok));
                 }
             });
         }

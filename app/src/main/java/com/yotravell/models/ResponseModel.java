@@ -26,6 +26,8 @@ public class ResponseModel {
     private String email;
     @SerializedName("userId")
     private Integer userId;
+    @SerializedName("activityFeed")
+    private ArrayList<Feed> activityFeed;
 
     public String getStatus() {
         return status;
@@ -89,5 +91,13 @@ public class ResponseModel {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public ArrayList<Feed> getActivityFeed() {
+        return activityFeed;
+    }
+
+    public void setActivityFeed(ArrayList<Feed> activityFeed) {
+        this.activityFeed = activityFeed;
     }
 }
