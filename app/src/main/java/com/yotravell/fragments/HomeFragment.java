@@ -4,14 +4,18 @@ package com.yotravell.fragments;
  * Created by Developer on 9/12/2017.
  */
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
@@ -19,6 +23,7 @@ import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.adapter.PostAdapter;
 import com.yotravell.constant.WebServiceConstant;
+import com.yotravell.interfaces.OnLoadMoreListener;
 import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Feed;
 import com.yotravell.models.ResponseModel;
@@ -28,16 +33,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private static View view;
+
+    private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private String[] Name;
-    private String[] Image;
+    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Feed> aResponse;
     private ProgressBar mProgressBar;
+
+    boolean userScrolled = false;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -46,18 +55,21 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        this.init();
+        return view;
+    }
+    // Initialize all variables and views
+    private void init() {
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressBar = view.findViewById(R.id.progressBar);
 
-        Name = getActivity().getResources().getStringArray(R.array.user_name);
-        Image = getActivity().getResources().getStringArray(R.array.user_image);
+        /*Name = getActivity().getResources().getStringArray(R.array.user_name);
+        Image = getActivity().getResources().getStringArray(R.array.user_image);*/
 
-        recyclerView.setHasFixedSize(true);
-
+        mRecyclerView.setHasFixedSize(true);
         feedWebService();
-        return view;
     }
     /**
      * this function use for get all member list.
@@ -68,7 +80,7 @@ public class HomeFragment extends Fragment {
         Map<String, String> params = new HashMap<>();
         return params;
     }
-    public void feedWebService(){
+    private void feedWebService(){
         AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.FEED_ACTIVITY, getParams(), new VolleyCallback() {
             @Override
             public void onSuccessResponse(String response) {
@@ -108,12 +120,33 @@ public class HomeFragment extends Fragment {
     /**
      * this function use for validate login form.
      */
-    public void setFeedListAdapter(){
-        adapter=new PostAdapter(getActivity(),aResponse);
-        recyclerView.setAdapter(adapter);
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setVisibility(View.VISIBLE);
+    private void setFeedListAdapter(){
+        adapter = new PostAdapter(getActivity(),aResponse, mRecyclerView);
+        mRecyclerView.setAdapter(adapter);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
+
+        implementScrollListener();
+    }
+    // Implement scroll listener
+    private void implementScrollListener() {
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.e("HomeFragment",dx+" onScrolled "+dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(recyclerView.SCROLL_AXIS_VERTICAL==newState) {
+                    Log.e("HomeFragment", recyclerView.SCROLL_AXIS_VERTICAL + " onScrollStateChanged " + newState + " odel state " + SCROLL_STATE_IDLE);
+                }
+            }
+
+        });
     }
 }

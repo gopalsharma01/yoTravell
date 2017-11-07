@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.yotravell.R;
 import com.yotravell.models.Feed;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by developer on 9/13/2017.
  */
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ImageLoader imageLoader;
     Context context;
@@ -34,61 +34,77 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     static final String TAG = "POST ADAPTER**";
     private static final int ITEM_TYPE_NORMAL = 0;
     private static final int ITEM_TYPE_HEADER = 1;
+    private final int VIEW_TYPE_LOADING = 2;
     private static ArrayList<Feed> aResponse;
 
-    public PostAdapter(Context context, ArrayList<Feed> response) {
+    public PostAdapter(Context context, ArrayList<Feed> response,RecyclerView mRecyclerView) {
         this.context = context;
         this.aResponse = response;
     }
 
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = null;// = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
+        //View view = null;// = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
         //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_single_post, parent, false);
         Log.d(TAG, "Constructor Calling "+screenWidth);
 
         //return new ViewHolder(view);
         if (viewType == ITEM_TYPE_NORMAL) {
-            view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
+            View view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
+            return new ViewHolder(view);
             //View normalView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_feed, null);
 
         } else if (viewType == ITEM_TYPE_HEADER) {
-            view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
+            View view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
+            return new ViewHolder(view);
+            //View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);
+
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = layoutInflater.inflate(R.layout.progress_bar,  parent, false);
+            Log.d(TAG, "loading Calling "+screenWidth);
+            return new LoadingViewHolder(view);
             //View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);
 
         }
-        return new ViewHolder(view);
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
-        Log.d(TAG, "Holder " + position);
-        if (position != 0) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holderView, int position) {
+
+        if (holderView instanceof ViewHolder) {
+            if (position != 0) {
+                Log.e(TAG, "Holder " + position);
+                ViewHolder holder = (ViewHolder) holderView;
             /*if(this.aResponse.get(position-1).getUserFullname().equals("")){
                 holder.name.setText(this.aResponse.get(position-1).getNiceName());
             }else{
                 holder.name.setText(this.aResponse.get(position-1).getUserFullname());
             }*/
 
-            holder.name.setText(Html.fromHtml(this.aResponse.get(position-1).getPostAction(), Images, null));
-            holder.content.setText(Html.fromHtml(this.aResponse.get(position-1).getContent(), Images, null));
+                holder.name.setText(Html.fromHtml(this.aResponse.get(position - 1).getPostAction(), Images, null));
+                holder.content.setText(Html.fromHtml(this.aResponse.get(position - 1).getContent(), Images, null));
 
-            Picasso.with(context)
-                    .load(this.aResponse.get(position-1).getUserProfileImg())
-                    .placeholder(R.drawable.ic_placeholder)   // optional
-                    .error(R.drawable.ic_placeholder)      // optional  ic_error
-                    .resize(400, 400)                        // optional
-                    .into(holder.feedImg);
-            //holder.UserImage.setImageUrl(Image[position].toString().trim(), imageLoader);
+                Picasso.with(context)
+                        .load(this.aResponse.get(position - 1).getUserProfileImg())
+                        .placeholder(R.drawable.ic_placeholder)   // optional
+                        .error(R.drawable.ic_placeholder)      // optional  ic_error
+                        .resize(400, 400)                        // optional
+                        .into(holder.feedImg);
+                //holder.UserImage.setImageUrl(Image[position].toString().trim(), imageLoader);
             /*Picasso.with(context)
                     .load(Image[position-1].toString().trim())
                     .placeholder(R.drawable.ic_placeholder)   // optional
                     .error(R.drawable.ic_placeholder)      // optional  ic_error
                     .resize(400, 400)                        // optional
                     .into(holder.UserImage);*/
-            //loadImage(Image[position],holder.UserImage);
+                //loadImage(Image[position],holder.UserImage);
 
+            }
+        }else if (holderView instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holderView;
+            loadingViewHolder.progressBar.setIndeterminate(true);
         }
     }
 
@@ -96,14 +112,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public int getItemViewType(int position) {
         if (position==0) {
             return ITEM_TYPE_NORMAL;
-        } else {
+        } else if(position <= this.aResponse.size()) {
             return ITEM_TYPE_HEADER;
+        } else{
+            Log.e("gopal sharma chec "," getid "+this.aResponse.size());
+            return VIEW_TYPE_LOADING;
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.aResponse.size();
+        return (this.aResponse.size()+2);
+    }
+
+    // "Loading item" ViewHolder
+    private static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View view) {
+            super(view);
+            progressBar = (ProgressBar) view.findViewById(R.id.more_progress);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

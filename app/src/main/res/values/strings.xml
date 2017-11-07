@@ -73,6 +73,8 @@
     <string name="menu_member">Members List</string>
     <string name="menu_friend">Friends List</string>
     <string name="menu_logout">Sign Out</string>
+    <string name="menu_profile_edit">Profile Edit</string>
+    <string name="menu_change_password">Change Password</string>
 
     <!-- Member And Friends List -->
     <string name="member_username">User Name</string>
