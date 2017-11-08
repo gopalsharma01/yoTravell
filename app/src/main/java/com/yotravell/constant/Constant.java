@@ -23,4 +23,6 @@ public class Constant {
     public static String SPINNER_COUNTRY = "Country";
     public static String SPINNER_CITY = "City";
     public static String SPINNER_LOCALITY = "Locality";
+
+    public static Integer FEED_PER_PAGE = 20;
 }

@@ -43,8 +43,6 @@ public class HomeFragment extends Fragment {
     //private ProgressBar mProgressBar;
     private LinearLayout progressLayout;
 
-    boolean userScrolled = false;
-
     int pageNo = 1;
 
     // Store a member variable for the listener
@@ -93,13 +91,14 @@ public class HomeFragment extends Fragment {
             public void onSuccessResponse(String response) {
                 isShowProgressBar(false);
                 try {
-                    //Log.e("response ",response);
+                    Log.e("response ",response);
                     //converting response to json object
                     if(response != null){
                         //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
                         if(responseData.getStatus().equals("1")){
+
                             if(aResponse != null){
                                 aResponse.addAll(responseData.getActivityFeed());
                                 adapter.notifyDataSetChanged();
@@ -140,7 +139,7 @@ public class HomeFragment extends Fragment {
      * this function use for validate login form.
      */
     private void setFeedListAdapter(){
-        adapter = new PostAdapter(getActivity(),aResponse, mRecyclerView);
+        adapter = new PostAdapter(getActivity(),aResponse,mRecyclerView);
         mRecyclerView.setAdapter(adapter);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -149,7 +148,7 @@ public class HomeFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.e("page", "page"+page);
+                //Log.e("page", "page"+page);
                 pageNo = page+1;
                 feedWebService(false);
             }

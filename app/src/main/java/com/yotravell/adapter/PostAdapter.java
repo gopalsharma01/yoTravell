@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.yotravell.R;
+import com.yotravell.constant.Constant;
 import com.yotravell.models.Feed;
 import com.yotravell.utils.CommonUtils;
 
@@ -49,28 +50,20 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //View view = null;// = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
-        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_single_post, parent, false);
-        Log.d(TAG, "Constructor Calling "+screenWidth);
-
-        //return new ViewHolder(view);
+        /*View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_single_post, parent, false);
+        View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);*/
+        //Log.d(TAG, "Constructor Calling "+screenWidth);
         if (viewType == ITEM_TYPE_NORMAL) {
             View view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
             return new ViewHolder(view);
-            //View normalView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_feed, null);
-
         } else if (viewType == ITEM_TYPE_HEADER) {
             View view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
             return new ViewHolder(view);
-            //View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);
-
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = layoutInflater.inflate(R.layout.progress_bar,  parent, false);
-            Log.d(TAG, "loading Calling "+screenWidth);
             return new LoadingViewHolder(view);
-            //View headerRow = LayoutInflater.from(getContext()).inflate(R.layout.row_single_post, null);
-
         }
-        return null;
+        return null;//new ViewHolder(view);
     }
 
     @Override
@@ -78,14 +71,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if (holderView instanceof ViewHolder) {
             if (position != 0) {
-                Log.e(TAG, "Holder " + position);
+                //Log.e(TAG, "Holder " + position);
                final ViewHolder holder = (ViewHolder) holderView;
-            /*if(this.aResponse.get(position-1).getUserFullname().equals("")){
-                holder.name.setText(this.aResponse.get(position-1).getNiceName());
-            }else{
-                holder.name.setText(this.aResponse.get(position-1).getUserFullname());
-            }*/
-
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -94,37 +81,33 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     }
                 });
-
                 Picasso.with(context)
                         .load(this.aResponse.get(position - 1).getUserProfileImg())
                         .placeholder(R.drawable.ic_placeholder)   // optional
                         .error(R.drawable.ic_placeholder)      // optional  ic_error
                         .resize(400, 400)                        // optional
                         .into(holder.feedImg);
-                //holder.UserImage.setImageUrl(Image[position].toString().trim(), imageLoader);
-            /*Picasso.with(context)
-                    .load(Image[position-1].toString().trim())
-                    .placeholder(R.drawable.ic_placeholder)   // optional
-                    .error(R.drawable.ic_placeholder)      // optional  ic_error
-                    .resize(400, 400)                        // optional
-                    .into(holder.UserImage);*/
-                //loadImage(Image[position],holder.UserImage);
 
             }
         }else if (holderView instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holderView;
-            loadingViewHolder.progressBar.setIndeterminate(true);
+            if((aResponse.size()-2)%Constant.FEED_PER_PAGE==0) {
+                loadingViewHolder.progressBar.setIndeterminate(true);
+            } else{
+                loadingViewHolder.progressBar.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
+        //Log.e("gopal sharma chec "," getid "+this.aResponse.size());
         if (position==0) {
             return ITEM_TYPE_NORMAL;
         } else if(position <= this.aResponse.size()) {
             return ITEM_TYPE_HEADER;
         } else{
-            Log.e("gopal sharma chec "," getid "+this.aResponse.size());
+            //Log.e("gopal sharma chec "," getid "+this.aResponse.size());
             return VIEW_TYPE_LOADING;
         }
     }
@@ -137,7 +120,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // "Loading item" ViewHolder
     private static class LoadingViewHolder extends RecyclerView.ViewHolder {
         private ProgressBar progressBar;
-        private LinearLayout progressLayout;
 
         public LoadingViewHolder(View view) {
             super(view);
@@ -193,40 +175,30 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String imageUrl;
         Context context;
         protected Drawable image;
-
         public FetchImageUrl(Context context, String url) {
             this.imageUrl = url;
             image = null;
             this.context = context;
         }
-
         public Drawable GetImage()
         {
             return image;
         }
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
-
         @Override
         protected Boolean doInBackground(String... args) {
             try {
                 InputStream input_stream = (InputStream) new URL(imageUrl).getContent();
                 image = Drawable.createFromStream(input_stream, "src name");
                 return true;
-
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e){
                 image = null;
             }
             return false;
         }
-
-
         @Override
         protected void onPostExecute(Boolean result) {
 
