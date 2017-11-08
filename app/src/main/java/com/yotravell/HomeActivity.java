@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.yotravell.VolleyService.AppController;
+import com.yotravell.fragments.ChangePasswordFragment;
+import com.yotravell.fragments.EditProfileFragment;
 import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
 import com.yotravell.fragments.MemberFragment;
@@ -91,6 +93,12 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.nav_friends_list: // Friends
                 fragment = new FriendsFragment();
+                break;
+            case R.id.nav_edit_profile: // Edit Profile
+                fragment = new EditProfileFragment();
+                break;
+            case R.id.nav_change_password: // Change Password
+                fragment = new ChangePasswordFragment();
                 break;
             default: // Logout
             {

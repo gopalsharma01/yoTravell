@@ -46,10 +46,16 @@
     <string name="reset_confirm_password_hint">Confirm Password</string>
     <string name="reset_title">Reset Password</string>
 
+    <!-- String related to Change password Activity-->
+    <string name="prompt_change_old_password">Old Password</string>
+    <string name="prompt_change_new_password">New Password</string>
+    <string name="prompt_change_confirm_password">Confirm Password</string>
 
     <!-- String button-->
     <string name="forget_btn">SUBMIT</string>
     <string name="forget_otp_btn">SUBMIT</string>
+    <string name="change_password_btn">SUBMIT</string>
+
     <!--Validation Error Messages-->
     <string name="error_message">There is a problem in your request.</string>
     <string name="error_field_required">This field is required</string>

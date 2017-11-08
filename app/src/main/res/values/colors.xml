@@ -6,6 +6,7 @@
     <color name="colorPink">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparentWhite">#55ffffff</color>
+    <color name="colorTransparentBlack">#55000000</color>
     <color name="colorTransparentBtnRed">#ffb42f2f</color>
     <color name="colorBlack">#000000</color>
 </resources>
