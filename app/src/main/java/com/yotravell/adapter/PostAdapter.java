@@ -3,6 +3,8 @@ package com.yotravell.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,7 +38,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM_TYPE_NORMAL = 0;
     private static final int ITEM_TYPE_HEADER = 1;
     private final int VIEW_TYPE_LOADING = 2;
-    private static ArrayList<Feed> aResponse;
+    private static ArrayList<Feed> aResponse = null;
 
     public PostAdapter(Context context, ArrayList<Feed> response,RecyclerView mRecyclerView) {
         this.context = context;
@@ -71,20 +74,26 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holderView, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holderView, final int position) {
 
         if (holderView instanceof ViewHolder) {
             if (position != 0) {
                 Log.e(TAG, "Holder " + position);
-                ViewHolder holder = (ViewHolder) holderView;
+               final ViewHolder holder = (ViewHolder) holderView;
             /*if(this.aResponse.get(position-1).getUserFullname().equals("")){
                 holder.name.setText(this.aResponse.get(position-1).getNiceName());
             }else{
                 holder.name.setText(this.aResponse.get(position-1).getUserFullname());
             }*/
 
-                holder.name.setText(Html.fromHtml(this.aResponse.get(position - 1).getPostAction(), Images, null));
-                holder.content.setText(Html.fromHtml(this.aResponse.get(position - 1).getContent(), Images, null));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.name.setText(Html.fromHtml(aResponse.get(position - 1).getPostAction(), Images, null));
+                        holder.content.setText(Html.fromHtml(aResponse.get(position - 1).getContent(), Images, null));
+
+                    }
+                });
 
                 Picasso.with(context)
                         .load(this.aResponse.get(position - 1).getUserProfileImg())
@@ -127,11 +136,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // "Loading item" ViewHolder
     private static class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
+        private ProgressBar progressBar;
+        private LinearLayout progressLayout;
 
         public LoadingViewHolder(View view) {
             super(view);
-            progressBar = (ProgressBar) view.findViewById(R.id.more_progress);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         }
     }
 
@@ -157,9 +167,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Html.ImageGetter Images = new Html.ImageGetter() {
 
         public Drawable getDrawable(String source) {
-
             Drawable drawable = null;
-
             FetchImageUrl fiu = new FetchImageUrl(context,source);
             try {
                 fiu.execute().get();
@@ -179,15 +187,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     };
 
+
+
     public class FetchImageUrl extends AsyncTask<String, String, Boolean> {
-
-
         String imageUrl;
         Context context;
         protected Drawable image;
 
-        public FetchImageUrl(Context context, String url)
-        {
+        public FetchImageUrl(Context context, String url) {
             this.imageUrl = url;
             image = null;
             this.context = context;
@@ -223,5 +230,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @Override
         protected void onPostExecute(Boolean result) {
 
-        }}
+        }
+    }
 }

@@ -14,31 +14,31 @@
         android:layout_height="match_parent"
         android:clickable="false">
 
-        <ProgressBar
+        <!--<ProgressBar
             android:id="@+id/progressBar"
             style="?android:progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminate="true" />
 
+            android:indeterminate="true" />-->
+
+        <include
+            android:id="@+id/progressBarLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            layout="@layout/progress_bar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:layout_above="@+id/loadItemsLayout_recyclerView" />
+            android:visibility="gone"
+            android:scrollbars="vertical" />
         <!-- include progress layout that will be displayed while loading more data -->
         <!-- initially it is hidden -->
 
-        <include
-            android:id="@+id/loadItemsLayout_recyclerView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            layout="@layout/progress_bar"
-            android:visibility="gone" />
+
     </RelativeLayout>
 
 </LinearLayout>
