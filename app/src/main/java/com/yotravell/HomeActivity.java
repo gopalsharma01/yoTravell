@@ -103,18 +103,18 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_feed: // Home
                 fragment = new HomeFragment();
                 break;
-            case R.id.nav_profile: // My Profile
+            /*case R.id.nav_profile: // My Profile
                 fragment = new ProfileFragment();
-                break;
+                break;*/
             case R.id.nav_members_list: // Members
                 fragment = new MemberFragment();
                 break;
             case R.id.nav_friends_list: // Friends
                 fragment = new FriendsFragment();
                 break;
-            case R.id.nav_edit_profile: // Edit Profile
+            /*case R.id.nav_edit_profile: // Edit Profile
                 fragment = new EditProfileFragment();
-                break;
+                break;*/
             case R.id.nav_change_password: // Change Password
                 fragment = new ChangePasswordFragment();
                 break;
