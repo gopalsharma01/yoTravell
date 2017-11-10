@@ -157,11 +157,11 @@ public class HomeActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             if(navId==0){
-                fragmentTransaction.add(R.id.flContent, fragment);
+                fragmentTransaction.add(R.id.flContent, fragment,tag);
                 fragmentTransaction.addToBackStack(null);
             }else{
-                fragmentTransaction.replace(R.id.flContent, fragment);
-                fragmentTransaction.addToBackStack(""+tag);
+                fragmentTransaction.replace(R.id.flContent, fragment,tag);
+                fragmentTransaction.addToBackStack(tag);
             }
 
             fragmentTransaction.commit();
@@ -181,16 +181,31 @@ public class HomeActivity extends AppCompatActivity
             FragmentManager manager = getSupportFragmentManager();
             if(manager.getBackStackEntryCount() > 1) {
                 super.onBackPressed();
-                /*HomeFragment currentFragment = (HomeFragment) manager.findFragmentById(R.id.flContent);
-                if(currentFragment instanceof HomeFragment){
-                    //mNavigationView.getMenu().getItem(0).setChecked(true);
-                }*/
+                Fragment currentFragment = manager.findFragmentById(R.id.flContent);
+                //HomeFragment currentFragment = (HomeFragment) manager.findFragmentById(R.id.flContent);
+                //navigationView.getMenu().getItem(0).setChecked(true);
+                setCheckedCurrentMenu(currentFragment);
             }else{
                 finish();
             }
         }
     }
 
+    /**
+     * function use for checked current menu according to fragment change
+     * @param currentFragment
+     */
+    private void setCheckedCurrentMenu(Fragment currentFragment){
+        if(currentFragment instanceof HomeFragment){
+            navigationView.setCheckedItem(R.id.nav_feed);//.getMenu().getItem(0).setChecked(true);
+        } else if(currentFragment instanceof MemberFragment){
+            navigationView.setCheckedItem(R.id.nav_members_list);
+        } else if(currentFragment instanceof FriendsFragment){
+            navigationView.setCheckedItem(R.id.nav_friends_list);
+        } else if(currentFragment instanceof ChangePasswordFragment){
+            navigationView.setCheckedItem(R.id.nav_change_password);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
