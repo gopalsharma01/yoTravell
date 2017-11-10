@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         params.put("page", ""+pageNo);
         return params;
     }
-    private void feedWebService(boolean isShow){
+    private void feedWebService(final boolean isShow){
 
         isShowProgressBar(isShow);
 
@@ -98,13 +98,20 @@ public class HomeFragment extends Fragment {
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
                         if(responseData.getStatus().equals("1")){
-                            if(aResponse != null){
-                                aResponse.addAll(responseData.getActivityFeed());
-                                adapter.notifyDataSetChanged();
-                            }else{
+                            if(isShow){
                                 aResponse = responseData.getActivityFeed();
                                 setFeedListAdapter();
+                            }else{
+                                if(aResponse != null){
+                                    aResponse.addAll(responseData.getActivityFeed());
+                                    adapter.notifyDataSetChanged();
+
+                                }else{
+                                    aResponse = responseData.getActivityFeed();
+                                    setFeedListAdapter();
+                                }
                             }
+
                         }else{
                             CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                         }
