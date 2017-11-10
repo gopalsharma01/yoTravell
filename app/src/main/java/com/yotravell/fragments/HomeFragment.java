@@ -98,7 +98,6 @@ public class HomeFragment extends Fragment {
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
                         if(responseData.getStatus().equals("1")){
-
                             if(aResponse != null){
                                 aResponse.addAll(responseData.getActivityFeed());
                                 adapter.notifyDataSetChanged();
@@ -106,7 +105,6 @@ public class HomeFragment extends Fragment {
                                 aResponse = responseData.getActivityFeed();
                                 setFeedListAdapter();
                             }
-
                         }else{
                             CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                         }

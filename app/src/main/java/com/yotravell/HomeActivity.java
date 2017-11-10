@@ -26,6 +26,7 @@ import com.yotravell.fragments.EditProfileFragment;
 import com.yotravell.fragments.FriendsFragment;
 import com.yotravell.fragments.HomeFragment;
 import com.yotravell.fragments.MemberFragment;
+import com.yotravell.fragments.ProfileFragment;
 import com.yotravell.utils.CommonUtils;
 import com.yotravell.utils.SharedPrefrenceManager;
 
@@ -56,7 +57,21 @@ public class HomeActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            /*@Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }*/
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                CommonUtils.hideKeyboard(HomeActivity.this);
+            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -87,6 +102,9 @@ public class HomeActivity extends AppCompatActivity
         switch (navItemId) {
             case R.id.nav_feed: // Home
                 fragment = new HomeFragment();
+                break;
+            case R.id.nav_profile: // My Profile
+                fragment = new ProfileFragment();
                 break;
             case R.id.nav_members_list: // Members
                 fragment = new MemberFragment();
@@ -204,7 +222,7 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         //int id = item.getItemId();
-        CommonUtils.hideKeyboard(HomeActivity.this);
+
         displayFragmentByPosition(item.getItemId());
         /*if (id == R.id.nav_camera) {
             // Handle the camera action

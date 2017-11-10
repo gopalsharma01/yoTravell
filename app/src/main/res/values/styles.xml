@@ -65,4 +65,10 @@
         <item name="android:background">@drawable/spinner_bg</item>
         <item name="android:padding">10dp</item>
     </style>
+
+    <style name="NavigationViewStyle">
+        <item name="android:textSize">20sp</item> <!-- menu item text size-->
+        <item name="android:listPreferredItemHeightSmall">40dp</item><!-- menu item height-->
+    </style>
+
 </resources>

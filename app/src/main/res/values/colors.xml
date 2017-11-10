@@ -9,4 +9,7 @@
     <color name="colorTransparentBlack">#55000000</color>
     <color name="colorTransparentBtnRed">#ffb42f2f</color>
     <color name="colorBlack">#000000</color>
+    <color name="nav.item.default">#444</color>
+    <color name="nav.item.select">#57CADB</color>
+    <color name="nav.item.background">#F4F4F4</color>
 </resources>

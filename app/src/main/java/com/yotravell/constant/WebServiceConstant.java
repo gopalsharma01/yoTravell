@@ -19,4 +19,5 @@ public class WebServiceConstant {
     public static final String ACCEPT_FRIEND_REQUEST = ROOT_URL + "accept_request";
     public static final String CANCEL_FRIEND_REQUEST = ROOT_URL + "reject_request";
     public static final String FEED_ACTIVITY = ROOT_URL + "feed_listing";
+    public static final String CHANGE_PASSWORD = ROOT_URL + "change_password";
 }

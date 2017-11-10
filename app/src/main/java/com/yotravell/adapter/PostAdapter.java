@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.yotravell.R;
+import com.yotravell.VolleyService.AppController;
 import com.yotravell.constant.Constant;
 import com.yotravell.models.Feed;
 import com.yotravell.utils.CommonUtils;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by developer on 9/13/2017.
  */
+
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ImageLoader imageLoader;
@@ -55,7 +57,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //Log.d(TAG, "Constructor Calling "+screenWidth);
         if (viewType == ITEM_TYPE_NORMAL) {
             View view = layoutInflater.inflate(R.layout.post_feed,  parent, false);
-            return new ViewHolder(view);
+            return new PostFeedViewHolder(view);
         } else if (viewType == ITEM_TYPE_HEADER) {
             View view = layoutInflater.inflate(R.layout.row_single_post,  parent, false);
             return new ViewHolder(view);
@@ -76,17 +78,23 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        holder.name.setText(Html.fromHtml(aResponse.get(position - 1).getPostAction(), Images, null));
+                        String name=aResponse.get(position - 1).getUserFullname();
+                        if(name != null){
+                            name = aResponse.get(position - 1).getNiceName();
+                        }
+                        holder.name.setText(Html.fromHtml(aResponse.get(position - 1).getUserFullname()));
+                        holder.action.setText(aResponse.get(position - 1).getPostAction());
                         holder.content.setText(Html.fromHtml(aResponse.get(position - 1).getContent(), Images, null));
+                        Picasso.with(context)
+                                .load(aResponse.get(position - 1).getUserProfileImg())
+                                .placeholder(R.drawable.ic_placeholder)   // optional
+                                .error(R.drawable.ic_placeholder)      // optional  ic_error
+                                .resize(400, 400)                        // optional
+                                .into(holder.feedImg);
 
                     }
                 });
-                Picasso.with(context)
-                        .load(this.aResponse.get(position - 1).getUserProfileImg())
-                        .placeholder(R.drawable.ic_placeholder)   // optional
-                        .error(R.drawable.ic_placeholder)      // optional  ic_error
-                        .resize(400, 400)                        // optional
-                        .into(holder.feedImg);
+
 
             }
         }else if (holderView instanceof LoadingViewHolder) {
@@ -96,6 +104,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else{
                 loadingViewHolder.progressBar.setVisibility(View.GONE);
             }
+        } else if (holderView instanceof PostFeedViewHolder) {
+            PostFeedViewHolder postFeedViewHolder = (PostFeedViewHolder) holderView;
+            Picasso.with(context)
+                    .load(AppController.aSessionUserData.getProfileImage())
+                    .placeholder(R.drawable.ic_placeholder)   // optional
+                    .error(R.drawable.ic_placeholder)      // optional  ic_error
+                    .resize(400, 400)                        // optional
+                    .into(postFeedViewHolder.feedImg);
         }
     }
 
@@ -117,6 +133,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return (this.aResponse.size()+2);
     }
 
+    // "PostFeed item" ViewHolder
+    private static class PostFeedViewHolder extends RecyclerView.ViewHolder {
+        private ImageView feedImg;
+
+        public PostFeedViewHolder(View view) {
+            super(view);
+            feedImg = (ImageView) view.findViewById(R.id.feedUserImg);
+        }
+    }
     // "Loading item" ViewHolder
     private static class LoadingViewHolder extends RecyclerView.ViewHolder {
         private ProgressBar progressBar;
@@ -128,18 +153,20 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
+        TextView name,action;
         Context context;
         ImageView feedImg;
         TextView content;
         TextView feedAction;
+
 
         public ViewHolder(View v) {
             super(v);
             Log.d(TAG, "View Holder");
 
             name = (TextView) v.findViewById(R.id.txtPostUserName);
-            feedImg = (ImageView) v.findViewById(R.id.feedImg);
+            action = (TextView) v.findViewById(R.id.txtPostTime);
+            feedImg = (ImageView) v.findViewById(R.id.circel);
             content = (TextView) v.findViewById(R.id.txtPostContent);
             //feedAction = (TextView) v.findViewById(R.id.txtPostTime);
         }
@@ -162,7 +189,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int imgH = drawable.getIntrinsicHeight();
             int imgW = drawable.getIntrinsicWidth();
             int padding = 0;
-            int realWidth = screenWidth - (2*200);
+            int realWidth = screenWidth - (2*100);
             int realHeight = imgH * realWidth/imgW;
             drawable.setBounds(padding,0,realWidth ,realHeight);
             return drawable;

@@ -81,6 +81,8 @@
     <string name="menu_logout">Sign Out</string>
     <string name="menu_profile_edit">Profile Edit</string>
     <string name="menu_change_password">Change Password</string>
+    <string name="menu_my_photos">My Photos</string>
+    <string name="menu_my_videos">My Videos</string>
 
     <!-- Member And Friends List -->
     <string name="member_username">User Name</string>

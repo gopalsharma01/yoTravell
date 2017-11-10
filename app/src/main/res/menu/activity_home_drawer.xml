@@ -8,6 +8,11 @@
             android:title="@string/menu_feed" />
 
         <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_member_list"
+            android:title="My Profile" />
+
+        <item
             android:id="@+id/nav_members_list"
             android:icon="@drawable/ic_member_list"
             android:title="@string/menu_member" />
@@ -25,6 +30,16 @@
             android:id="@+id/nav_change_password"
             android:icon="@drawable/ic_pass"
             android:title="@string/menu_change_password" />
+
+        <item
+            android:id="@+id/nav_my_photos"
+            android:icon="@drawable/ic_photos"
+            android:title="@string/menu_my_photos" />
+
+        <item
+            android:id="@+id/nav_my_videos"
+            android:icon="@drawable/ic_videos"
+            android:title="@string/menu_my_videos" />
 
         <item
             android:id="@+id/nav_logout"
