@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
         AdapterTabs adapter = new AdapterTabs(getChildFragmentManager());
         adapter.addFragment(new PostFragment(), "Post");
         adapter.addFragment(new GalleryFragment(), "Gallery");
+
         /*adapter.addFragment(new TodaysFixturesFragment(), "Today");
         adapter.addFragment(new WeekFixturesFragment(), "Week");
         adapter.addFragment(new MonthFixturesFragment(), "Month");
