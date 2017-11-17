@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,61 +16,59 @@ import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
-import com.yotravell.adapter.PostAdapter;
-import com.yotravell.constant.Constant;
+import com.yotravell.adapter.FriendAdapter;
+import com.yotravell.adapter.MemberAdapter;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
-import com.yotravell.models.Feed;
+import com.yotravell.models.Members;
 import com.yotravell.models.ResponseModel;
 import com.yotravell.utils.CommonUtils;
-import com.yotravell.utils.EndlessRecyclerViewScrollListener;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PostFragment extends Fragment {
+public class FollowerFragment extends Fragment {
 
-    //private String[] Name,Image;
-    private static View viewPost;
-
+    private String[] aName,aImage;
+    private LinearLayout progressBarLayout;
+    private View followerTabView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private LinearLayout profileProgressLayout;
+    private RecyclerView.LayoutManager layoutManager;
 
-    private ArrayList<Feed> aResponse;
+    private ArrayList<Members> aResponse;
 
     private int pageNo = 1;
-    private EndlessRecyclerViewScrollListener scrollListener;
 
-    public static PostFragment newInstance() {
-        return new PostFragment();
+    public static FollowerFragment newInstance() {
+        return new FollowerFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewPost = inflater.inflate(R.layout.tab_fragment_post,container, false);
-
+        followerTabView = inflater.inflate(R.layout.tab_fragment_follower,container, false);
         init();
-        return viewPost;
+        return followerTabView;
     }
 
     private void init(){
-        mRecyclerView = (RecyclerView) viewPost.findViewById(R.id.recycler_view_profile);
-        profileProgressLayout = viewPost.findViewById(R.id.progressBarProfileLayout);
+        aName = getActivity().getResources().getStringArray(R.array.user_name);
+        aImage = getActivity().getResources().getStringArray(R.array.user_image);
 
-        /*Name = getActivity().getResources().getStringArray(R.array.user_name);
-        Image = getActivity().getResources().getStringArray(R.array.user_image);*/
+        progressBarLayout = followerTabView.findViewById(R.id.progressBarFollowerTabLayout);
+        mRecyclerView = followerTabView.findViewById(R.id.followerTabRecyclerView);
 
         mRecyclerView.setHasFixedSize(true);
-        feedWebService(true);
+        followerWebService(true);
+
     }
     private void isShowProgressBar(boolean isShow){
         if(isShow){
-            profileProgressLayout.setVisibility(View.VISIBLE);
+            progressBarLayout.setVisibility(View.VISIBLE);
         } else{
-            profileProgressLayout.setVisibility(View.GONE);
+            progressBarLayout.setVisibility(View.GONE);
         }
     }
     /**
@@ -82,36 +79,25 @@ public class PostFragment extends Fragment {
     private Map<String, String> getParams(){
         Map<String, String> params = new HashMap<>();
         params.put("page", ""+pageNo);
-        params.put("user_id", ""+AppController.aSessionUserData.getId());
+        params.put("user_id", ""+ AppController.aSessionUserData.getId());
         return params;
     }
-    private void feedWebService(final boolean isShow){
+    private void followerWebService(final boolean isShow){
         isShowProgressBar(isShow);
-        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.FEED_ACTIVITY, getParams(), new VolleyCallback() {
+        AppController.getInstance().callVollayWebService(Request.Method.POST, WebServiceConstant.FRIEND_LIST_URL, getParams(), new VolleyCallback() {
             @Override
             public void onSuccessResponse(String response) {
                 isShowProgressBar(false);
                 try {
-                    Log.e("response ",response);
+                    //Log.e("response ",response);
                     //converting response to json object
                     if(response != null){
                         //JSONObject obj = new JSONObject(response);
                         Gson gson = new Gson();
                         ResponseModel responseData =  gson.fromJson(response, ResponseModel.class);
                         if(responseData.getStatus().equals("1")){
-                            if(isShow){
-                                aResponse = responseData.getActivityFeed();
-                                setFeedListAdapter();
-                            }else{
-                                if(aResponse != null){
-                                    aResponse.addAll(responseData.getActivityFeed());
-                                    adapter.notifyDataSetChanged();
-
-                                }else{
-                                    aResponse = responseData.getActivityFeed();
-                                    setFeedListAdapter();
-                                }
-                            }
+                            aResponse = responseData.getaUsersList();
+                            setFollowerListAdapter();
                         }else{
                             CommonUtils.showAlertMessage(getActivity(),getString(R.string.error),getString(R.string.error),responseData.getMessage(),getString(R.string.ok));
                         }
@@ -125,7 +111,7 @@ public class PostFragment extends Fragment {
             }
             @Override
             public void onErrorResponse(String result) {
-                isShowProgressBar(false);
+                //mProgressDialog.dismiss();
             }
         });
     }
@@ -133,16 +119,14 @@ public class PostFragment extends Fragment {
     /**
      * this function use for validate login form.
      */
-    private void setFeedListAdapter(){
-        /*isShowProgressBar(true);
-        adapter = new ProfilePostAdapter(getActivity(),Name,Image,mRecyclerView);
+    private void setFollowerListAdapter(){
+        adapter=new FriendAdapter(getActivity(),aResponse,"TabFriend");
         mRecyclerView.setAdapter(adapter);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setVisibility(View.VISIBLE);
-        isShowProgressBar(false);
-        */
-        adapter = new PostAdapter(getActivity(),aResponse,mRecyclerView, Constant.PERSONAL_FEED);
+        progressBarLayout.setVisibility(View.GONE);
+        /*adapter = new PostAdapter(getActivity(),aResponse,mRecyclerView, Constant.PERSONAL_FEED);
         mRecyclerView.setAdapter(adapter);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -157,6 +141,6 @@ public class PostFragment extends Fragment {
             }
         };
         // Adds the scroll listener to RecyclerView
-        mRecyclerView.addOnScrollListener(scrollListener);
+        mRecyclerView.addOnScrollListener(scrollListener);*/
     }
 }
