@@ -21,8 +21,10 @@ public class User {
     private String totalFriend;
     @SerializedName("profileImage")
     private String profileImage;
+    @SerializedName("fullProfileImage")
+    private String fullProfileImage;
 
-    public User(String username, String email, String fullName, Integer id,String totalMember, String totalFriend,String profileImage) {
+    public User(String username, String email, String fullName, Integer id,String totalMember, String totalFriend,String profileImage,String fullProfileImage) {
         this.username = username;
         this.email = email;
         this.fullName = fullName;
@@ -30,6 +32,7 @@ public class User {
         this.totalMember = totalMember;
         this.totalFriend = totalFriend;
         this.profileImage = profileImage;
+        this.fullProfileImage = fullProfileImage;
     }
 
     public String getProfileImage() {
@@ -86,5 +89,13 @@ public class User {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getFullProfileImage() {
+        return fullProfileImage;
+    }
+
+    public void setFullProfileImage(String fullProfileImage) {
+        this.fullProfileImage = fullProfileImage;
     }
 }

@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.yotravell.R;
 import com.yotravell.VolleyService.AppController;
 import com.yotravell.adapter.PostAdapter;
+import com.yotravell.constant.Constant;
 import com.yotravell.constant.WebServiceConstant;
 import com.yotravell.interfaces.VolleyCallback;
 import com.yotravell.models.Feed;
@@ -43,7 +44,7 @@ public class HomeFragment extends Fragment {
     //private ProgressBar mProgressBar;
     private LinearLayout progressLayout;
 
-    int pageNo = 1;
+    private int pageNo = 1;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -144,7 +145,7 @@ public class HomeFragment extends Fragment {
      * this function use for validate login form.
      */
     private void setFeedListAdapter(){
-        adapter = new PostAdapter(getActivity(),aResponse,mRecyclerView);
+        adapter = new PostAdapter(getActivity(),aResponse,mRecyclerView, Constant.ALL_FEED);
         mRecyclerView.setAdapter(adapter);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);

@@ -93,4 +93,16 @@
     <string name="member_request_accept">Accept</string>
     <string name="member_request_reject">Reject</string>
 
+    <!-- User Profile Strings -->
+    <string name="tab_post">Post</string>
+    <string name="tab_gallery">Gallery</string>
+    <string name="tab_video">Videos</string>
+    <string name="tab_follower">Followers</string>
+
+    <string name="profileimage1">https://api.learn2crack.com/android/images/donut.png</string>
+    <string name="profileimage2">https://api.learn2crack.com/android/images/froyo.png</string>
+    <string name="profileimage3">https://api.learn2crack.com/android/images/ginger.png</string>
+    <string name="profileimage4">https://api.learn2crack.com/android/images/honey.png</string>
+    <string name="profileimage5">https://api.learn2crack.com/android/images/eclair.png</string>
+
 </resources>

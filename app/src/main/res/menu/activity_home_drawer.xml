@@ -7,25 +7,24 @@
             android:icon="@drawable/ic_menu_feed"
             android:title="@string/menu_feed" />
 
-        <!--<item
+        <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_member_list"
+            android:icon="@drawable/ic_profile"
             android:title="My Profile" />
--->
         <item
             android:id="@+id/nav_members_list"
             android:icon="@drawable/ic_member_list"
             android:title="@string/menu_member" />
 
-        <item
+        <!--<item
             android:id="@+id/nav_friends_list"
             android:icon="@drawable/ic_friends_list"
-            android:title="@string/menu_friend" />
+            android:title="@string/menu_friend" />-->
 
-       <!-- <item
+        <item
             android:id="@+id/nav_edit_profile"
             android:icon="@drawable/ic_edit"
-            android:title="@string/menu_profile_edit" />-->
+            android:title="@string/menu_profile_edit" />
         <item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/ic_pass"

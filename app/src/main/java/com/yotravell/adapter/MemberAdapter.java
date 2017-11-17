@@ -101,7 +101,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             context = v.getContext();
 
             name = (TextView) v.findViewById(R.id.txtUserName);
-            UserImage = (ImageView) v.findViewById(R.id.userImg);
+            UserImage = (ImageView) v.findViewById(R.id.imgMemberFragment);
             lastActivity = (TextView) v.findViewById(R.id.txtLastLogin);
 
             requestAction = (LinearLayout) v.findViewById(R.id.requestAction);

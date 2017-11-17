@@ -14,10 +14,6 @@ public class ResponseModel {
     private String status;
     @SerializedName("message")
     private String message;
-    @SerializedName("aCountryList")
-    private ArrayList<CountryList> aCountryList;
-    @SerializedName("aUsersList")
-    private ArrayList<Members> aUsersList;
     @SerializedName("UserData")
     private User UserData;
     @SerializedName("username")
@@ -28,6 +24,12 @@ public class ResponseModel {
     private Integer userId;
     @SerializedName("activityFeed")
     private ArrayList<Feed> activityFeed;
+    @SerializedName("aCountryList")
+    private ArrayList<CountryList> aCountryList;
+    @SerializedName("aUsersList")
+    private ArrayList<Members> aUsersList;
+    @SerializedName("aUploadedPhotos")
+    private ArrayList<Gallery> aUploadedPhotos;
 
     public String getStatus() {
         return status;
@@ -99,5 +101,13 @@ public class ResponseModel {
 
     public void setActivityFeed(ArrayList<Feed> activityFeed) {
         this.activityFeed = activityFeed;
+    }
+
+    public ArrayList<Gallery> getaUploadedPhotos() {
+        return aUploadedPhotos;
+    }
+
+    public void setaUploadedPhotos(ArrayList<Gallery> aUploadedPhotos) {
+        this.aUploadedPhotos = aUploadedPhotos;
     }
 }

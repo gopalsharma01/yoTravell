@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -169,9 +172,23 @@ public class CommonUtils {
     /**
      * Get Device window height and width
      */
-    public static int getScreenWidth()
+    public static int getScreenWidth(Context mCtx)
     {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
+        //return Resources.getSystem().getDisplayMetrics().widthPixels;
+        int columnWidth;
+        Context _context = mCtx;
+        WindowManager wm = (WindowManager) _context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        final Point point = new Point();
+        try {
+            display.getSize(point);
+        } catch (java.lang.NoSuchMethodError ignore) { // Older device
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+        columnWidth = point.x;
+        return columnWidth;
     }
     public static int getScreenHeight()
     {

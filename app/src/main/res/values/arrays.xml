@@ -8,10 +8,20 @@
         <item>Fifth User</item>
     </string-array>
     <string-array name="user_image">
-        <item>http://api.learn2crack.com/android/images/donut.png</item>
-        <item>http://api.learn2crack.com/android/images/eclair.png</item>
-        <item>http://api.learn2crack.com/android/images/froyo.png</item>
-        <item>http://api.learn2crack.com/android/images/ginger.png</item>
-        <item>http://api.learn2crack.com/android/images/honey.png</item>
+        <item>@string/profileimage1</item>
+        <item>@string/profileimage2</item>
+        <item>@string/profileimage3</item>
+        <item>@string/profileimage4</item>
+        <item>@string/profileimage5</item>
     </string-array>
+
+    <string-array name="my_profile_tab_name">
+        <item>@string/tab_post</item>
+        <item>@string/tab_gallery</item>
+        <item>@string/tab_video</item>
+        <item>@string/tab_follower</item>
+    </string-array>
+    <integer-array name="my_profile_tab_icon">
+        <item>@drawable/ic_videos</item>
+    </integer-array>
 </resources>

@@ -12,4 +12,7 @@
     <color name="nav.item.default">#444</color>
     <color name="nav.item.select">#57CADB</color>
     <color name="nav.item.background">#F4F4F4</color>
+    <color name="profile.tabs.default">#AAAAAA</color>
+    <color name="profile.tabs.select">#57CADB</color>
+    <color name="colorDarkTransparentBlack">#99000000</color>
 </resources>

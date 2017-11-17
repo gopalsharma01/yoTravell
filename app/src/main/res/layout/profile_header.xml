@@ -7,8 +7,11 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/imgProfile"
+        android:layout_height="250dp"
+        android:id="@+id/imgProfilePic"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:background="@color/cardview_dark_background"
         />
     <View
@@ -61,11 +64,8 @@
 
            </LinearLayout>
        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10px"
-            android:background="#ccc" />
-        <LinearLayout
+
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
@@ -157,5 +157,5 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="25px"
-            android:background="#cccccc" />
+            android:background="#cccccc" />-->
 </LinearLayout>

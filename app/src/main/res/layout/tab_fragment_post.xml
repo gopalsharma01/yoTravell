@@ -15,14 +15,15 @@
         android:clickable="false">
 
         <include
-            android:id="@+id/progressBarLayout"
+            android:id="@+id/progressBarProfileLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
             layout="@layout/progress_bar" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/recycler_view_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"

@@ -2,32 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="10px"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="25px"
-        android:background="@color/colorPrimaryDark" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="18dp"
         android:clickable="false">
 
         <include
-            android:id="@+id/progressBarLayout"
+            android:id="@+id/progressBarLayourProfileGallery"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
+            android:visibility="gone"
             layout="@layout/progress_bar" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
+
+        <GridView
+            android:id="@+id/gridViewUserImages"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:columnWidth="100dp"
+            android:nestedScrollingEnabled="true"
+            android:drawSelectorOnTop="true"
+            android:gravity="center"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:horizontalSpacing="10dp"
+            android:layout_above="@+id/progressBarLayourProfileGalleryLoadMore"
+            android:verticalSpacing="10dp"
+            android:focusable="true"
+            android:clickable="true"/>
+        <include
+            android:id="@+id/progressBarLayourProfileGalleryLoadMore"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/progress_bar"
             android:visibility="gone"
-            android:background="@color/colorPrimaryDark"
-            android:scrollbars="vertical" />
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

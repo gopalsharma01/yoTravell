@@ -103,18 +103,18 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_feed: // Home
                 fragment = new HomeFragment();
                 break;
-            /*case R.id.nav_profile: // My Profile
+            case R.id.nav_profile: // My Profile
                 fragment = new ProfileFragment();
-                break;*/
+                break;
             case R.id.nav_members_list: // Members
                 fragment = new MemberFragment();
                 break;
-            case R.id.nav_friends_list: // Friends
+            /*case R.id.nav_friends_list: // Friends
                 fragment = new FriendsFragment();
-                break;
-            /*case R.id.nav_edit_profile: // Edit Profile
-                fragment = new EditProfileFragment();
                 break;*/
+            case R.id.nav_edit_profile: // Edit Profile
+                fragment = new EditProfileFragment();
+                break;
             case R.id.nav_change_password: // Change Password
                 fragment = new ChangePasswordFragment();
                 break;
@@ -200,8 +200,10 @@ public class HomeActivity extends AppCompatActivity
             navigationView.setCheckedItem(R.id.nav_feed);//.getMenu().getItem(0).setChecked(true);
         } else if(currentFragment instanceof MemberFragment){
             navigationView.setCheckedItem(R.id.nav_members_list);
-        } else if(currentFragment instanceof FriendsFragment){
-            navigationView.setCheckedItem(R.id.nav_friends_list);
+        } else if(currentFragment instanceof ProfileFragment){
+            navigationView.setCheckedItem(R.id.nav_profile);
+        } else if(currentFragment instanceof EditProfileFragment){
+            navigationView.setCheckedItem(R.id.nav_edit_profile);
         } else if(currentFragment instanceof ChangePasswordFragment){
             navigationView.setCheckedItem(R.id.nav_change_password);
         }

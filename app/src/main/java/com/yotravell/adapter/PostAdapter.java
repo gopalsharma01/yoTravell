@@ -36,16 +36,20 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     ImageLoader imageLoader;
     Context context;
-    private static int screenWidth = CommonUtils.getScreenWidth();
+    private static int screenWidth;
     static final String TAG = "POST ADAPTER**";
     private static final int ITEM_TYPE_NORMAL = 0;
     private static final int ITEM_TYPE_HEADER = 1;
     private final int VIEW_TYPE_LOADING = 2;
     private static ArrayList<Feed> aResponse = null;
+    private String feedType;
+    private int addMoreIndex = 1;
 
-    public PostAdapter(Context context, ArrayList<Feed> response,RecyclerView mRecyclerView) {
+    public PostAdapter(Context context, ArrayList<Feed> response,RecyclerView mRecyclerView,String feedType) {
         this.context = context;
         this.aResponse = response;
+        this.feedType = feedType;
+        this.screenWidth = CommonUtils.getScreenWidth(context);
     }
 
     @Override
@@ -72,35 +76,37 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holderView, final int position) {
 
         if (holderView instanceof ViewHolder) {
-            if (position != 0) {
-                //Log.e(TAG, "Holder " + position);
-               final ViewHolder holder = (ViewHolder) holderView;
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String name=aResponse.get(position - 1).getUserFullname();
-                        if(name != null){
-                            name = aResponse.get(position - 1).getNiceName();
-                        }
-                        holder.name.setText(Html.fromHtml(aResponse.get(position - 1).getUserFullname()));
-                        holder.action.setText(aResponse.get(position - 1).getPostAction());
-                        holder.content.setText(Html.fromHtml(aResponse.get(position - 1).getContent(), Images, null));
-                        Picasso.with(context)
-                                .load(aResponse.get(position - 1).getUserProfileImg())
-                                .placeholder(R.drawable.ic_placeholder)   // optional
-                                .error(R.drawable.ic_placeholder)      // optional  ic_error
-                                .resize(400, 400)                        // optional
-                                .into(holder.feedImg);
-
-                    }
-                });
-
-
+            int pos = position;
+            if (position != 0 && this.feedType.equals("All")) {
+                pos = position - 1;
             }
+            final int index = pos;
+            Log.e(TAG, "Holder " + index+" size "+this.aResponse.size());
+            final ViewHolder holder = (ViewHolder) holderView;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    String name=aResponse.get(index).getUserFullname();
+                    if(name != null){
+                        name = aResponse.get(index).getNiceName();
+                    }
+                    holder.name.setText(Html.fromHtml(aResponse.get(index).getUserFullname()));
+                    holder.action.setText(aResponse.get(index).getPostAction());
+                    holder.content.setText(Html.fromHtml(aResponse.get(index).getContent(), Images, null));
+                    Picasso.with(context)
+                            .load(aResponse.get(index).getUserProfileImg())
+                            .placeholder(R.drawable.ic_placeholder)   // optional
+                            .error(R.drawable.ic_placeholder)      // optional  ic_error
+                            .resize(400, 400)                        // optional
+                            .into(holder.feedImg);
+
+                }
+            });
         }else if (holderView instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holderView;
-            if((aResponse.size()-2)%Constant.FEED_PER_PAGE==0) {
+            if((aResponse.size())%Constant.FEED_PER_PAGE==0) {
                 loadingViewHolder.progressBar.setIndeterminate(true);
+                loadingViewHolder.progressBar.setVisibility(View.VISIBLE);
             } else{
                 loadingViewHolder.progressBar.setVisibility(View.GONE);
             }
@@ -118,19 +124,22 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         //Log.e("gopal sharma chec "," getid "+this.aResponse.size());
-        if (position==0) {
+
+        if (position==0 && this.feedType.equals("All")) {
             return ITEM_TYPE_NORMAL;
-        } else if(position <= this.aResponse.size()) {
+        } else if((position < (this.aResponse.size() + 1) && this.feedType.equals("All")) || (position < this.aResponse.size())) {
             return ITEM_TYPE_HEADER;
         } else{
-            //Log.e("gopal sharma chec "," getid "+this.aResponse.size());
             return VIEW_TYPE_LOADING;
         }
     }
 
     @Override
     public int getItemCount() {
-        return (this.aResponse.size()+2);
+        if(this.feedType.equals("All")){
+            this.addMoreIndex = 2;
+        }
+        return (this.aResponse.size() + this.addMoreIndex);
     }
 
     // "PostFeed item" ViewHolder

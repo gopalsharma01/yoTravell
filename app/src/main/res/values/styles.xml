@@ -72,4 +72,9 @@
         <item name="android:listPreferredItemHeightSmall">40dp</item><!-- menu item height-->
     </style>
 
+    <!-- Tab Style -->
+    <style name="profileTabStyle" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textColor">@drawable/tab_item_color</item>
+    </style>
+
 </resources>

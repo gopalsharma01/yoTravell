@@ -17,6 +17,7 @@ public class Constant {
     public static String TOTAL_MEMBER ="total_member";
     public static String USER_TOTAL_FRIEND ="total_friend";
     public static String USER_IMAGE ="user_image";
+    public static String USER_FULL_IMAGE ="user_full_image";
     public static String USER_TYPE = "userType";
 
     public static String SPINNER_CATEGORY = "Category";
@@ -25,4 +26,8 @@ public class Constant {
     public static String SPINNER_LOCALITY = "Locality";
 
     public static Integer FEED_PER_PAGE = 20;
+    public static String ALL_FEED = "All";
+    public static String PERSONAL_FEED = "Personal";
+
+    public static Integer MY_GALLERY_PER_PAGE = 20;
 }
